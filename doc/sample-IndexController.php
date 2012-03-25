@@ -1,5 +1,12 @@
 <?php
 
+/**
+ * Index controller
+ *
+ * @copyright 2012 Mikhail Yurasov
+ * @package ProjectName
+ */
+
 namespace ProjectName\Controller;
 
 use ymF\Controller\TwigController;

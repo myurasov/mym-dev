@@ -2,6 +2,9 @@
 
 /**
  * Front controller
+ *
+ * @copyright 2012 Mikhail Yurasov
+ * @package ProjectName
  */
 
 use Symfony\Component\HttpFoundation\Request;

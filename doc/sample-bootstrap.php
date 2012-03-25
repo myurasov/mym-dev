@@ -4,7 +4,7 @@
  * Bootstrap
  *
  * @copyright 2012 Mikhail Yurasov
- * @package GeekBase
+ * @package ProjectName
  */
 
 // Definitions
