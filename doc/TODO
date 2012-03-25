@@ -1,0 +1,4 @@
+* automatic HTTP headers
+  see: http://docs.symfony-reloaded.org/guides/cache/http.html
+* Manipulating Response Headers as here:
+  http://docs.symfony-reloaded.org/guides/cache/http.html
