@@ -12,7 +12,7 @@ abstract class TwigController
 
   public function __construct()
   {
-    $this->conf = Config::get("TwigController");
+    $this->conf = Config::$options["TwigController"];
   }
 
   /**

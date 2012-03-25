@@ -53,7 +53,7 @@ class PDOHelper
       if (!is_null($config))
         self::setConfig($config);
       else if (is_null(self::$config))
-        self::setConfig(Config::get('PDOHelper'));
+        self::setConfig(Config::$options['PDOHelper']);
 
       self::$pdo = new PDO(
         self::$config['dsn'],

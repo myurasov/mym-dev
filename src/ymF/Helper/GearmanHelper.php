@@ -8,14 +8,14 @@ class GearmanHelper
 
   public static function setConfig($config = null)
   {
-    static::$config = is_null($config) 
-      ? Config::get('GearmanHelper')
+    static::$config = is_null($config)
+      ? Config::$options['GearmanHelper']
       : $config;
   }
 
   /**
    * Get GeramanClient instance
-   * 
+   *
    * @param array $config
    * @return \GearmanClient
    */
@@ -51,7 +51,7 @@ class GearmanHelper
 
   /**
    * Encode data for passing in Gearman functions
-   * 
+   *
    * @param mixed $workload
    * @return string
    */
@@ -62,7 +62,7 @@ class GearmanHelper
 
   /**
    * Decode data
-   * 
+   *
    * @param string $workload
    * @return mixed
    */
@@ -73,7 +73,7 @@ class GearmanHelper
 
   /**
    * Create full function name
-   * 
+   *
    * @param string $name
    * @param string $hostname
    */

@@ -20,11 +20,11 @@ class Doctrine2SQLLogger implements \Doctrine\DBAL\Logging\SQLLogger
 
   public function __construct()
   {
-    $this->logFile = Config::get('Doctrine2SQLLogger.logFile');
+    $this->logFile = Config::$options['Doctrine2SQLLogger']['logFile'];
 
     if (!file_exists($this->logFile))
       touch($this->logFile);
-      
+
     @chmod($this->logFile, 0666);
     $this->fp = fopen($this->logFile, 'a');
   }

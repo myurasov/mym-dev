@@ -29,7 +29,8 @@ class TwigHelper
     if (!class_exists('Twig_Autoloader', false))
     {
       // Load Twig library
-      require \ymF\Config::get('libraries.Twig') . '/lib/Twig/Autoloader.php';
+      require \ymF\Config::$options['libraries']['Twig']
+        . '/lib/Twig/Autoloader.php';
 
       // Register twig autoloader
       \Twig_Autoloader::register();
@@ -60,7 +61,7 @@ class TwigHelper
    */
   public static function getTemplatesDir()
   {
-    return Config::get('TwigHelper.templatesDir');
+    return Config::$options['TwigHelper']['templatesDir'];
   }
 
   /**
@@ -87,7 +88,7 @@ class TwigHelper
 
     // Configure and create Twig
 
-    $config = Config::get('TwigHelper');
+    $config = Config::$options['TwigHelper'];
     $loader = new \Twig_Loader_Filesystem($config['templatesDir']);
     self::$twigEnv = new \Twig_Environment($loader, $config['enviromentOptions']);
 

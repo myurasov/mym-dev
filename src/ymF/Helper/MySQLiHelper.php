@@ -23,14 +23,14 @@ class MySQLiHelper
 
   /**
    * Get mysqli instance
-   * 
+   *
    * @return mysqli
    */
   public static function getMySQLi()
   {
     if (is_null(self::$mysqli))
     {
-      $config = Config::get('MySQLiHelper');
+      $config = Config::$options['MySQLiHelper'];
 
       self::$mysqli = new \mysqli(
         $config['host'],

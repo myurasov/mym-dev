@@ -12,13 +12,13 @@ class MemcachedHelper
   public static function setConfig($config = null)
   {
     if (is_null($config))
-      $config = Config::get('MemcachedHelper');
+      $config = Config::$options['MemcachedHelper'];
     self::$config = $config;
   }
 
   /**
    * Get Memcached instance
-   * 
+   *
    * @param array $config
    * @return Memcached
    */

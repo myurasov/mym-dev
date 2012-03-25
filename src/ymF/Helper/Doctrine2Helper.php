@@ -24,14 +24,14 @@ class Doctrine2Helper
 
   /**
    * Get Doctrine EntityManager
-   * 
+   *
    * @return \Doctrine\ORM\EntityManager
    */
   public static function getEntityManager()
   {
     if (is_null(self::$entityManager))
       self::_createEntityManager();
-    
+
     return self::$entityManager;
   }
 
@@ -41,8 +41,8 @@ class Doctrine2Helper
   private static function _createEntityManager()
   {
     // Get options
-    
-    $options = Config::get('Doctrine2Helper');
+
+    $options = Config::$options['Doctrine2Helper'];
     $configOptions = $options['configuration'];
     $connectOptions = $options['connection'];
 
@@ -65,7 +65,7 @@ class Doctrine2Helper
     $config = new \Doctrine\ORM\Configuration();
 
     // SQL logger
-    
+
     if (!is_null($configOptions['sqlLoggerClass']))
     {
       if ($configOptions['sqlLoggerClass'] instanceof \Closure)
@@ -73,14 +73,14 @@ class Doctrine2Helper
       else
         $config->setSQLLogger(new $configOptions['sqlLoggerClass']);
     }
-    
+
     // Proxies
     $config->setProxyDir($configOptions['proxiesDir']);
     $config->setProxyNamespace($configOptions['proxiesNamespace']);
     $config->setAutoGenerateProxyClasses($configOptions['proxiesAutoGeneration']);
-    
+
     // Metadata driver
-    
+
     if ($configOptions['metadataDriverClass'] instanceof \Closure)
       $config->setMetadataDriverImpl($configOptions['metadataDriverClass']());
     else
@@ -88,7 +88,7 @@ class Doctrine2Helper
         new $configOptions['metadataDriverClass']($configOptions['metadataDir']));
 
     // Caching of metadata & queries
-    
+
     if ($configOptions['cacheClass'] instanceof \Closure)
       $cache = $configOptions['cacheClass']();
     else
@@ -111,9 +111,9 @@ class Doctrine2Helper
     if (!self::$autoloadRegistered)
     {
       // Include Doctrine ClassLoader
-      $libraryPath = \ymF\Config::get('libraries.Doctrine2');
+      $libraryPath = \ymF\Config::$options['libraries']['Doctrine2'];
       require $libraryPath . '/Doctrine/Common/ClassLoader.php';
-      
+
       // Register autoloader
       $classLoader = new \Doctrine\Common\ClassLoader('Doctrine', $libraryPath);
       $classLoader->register();

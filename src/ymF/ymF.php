@@ -11,6 +11,8 @@ namespace ymF;
 
 use ymF\Exception\Exception;
 
+use Symfony\Component\HttpFoundation\Request;
+
 /**
  * ymF Kernel class
  *
@@ -19,6 +21,41 @@ class Kernel
 {
   // Root namespaces registered for autoloading
   private static $autoload = array();
+
+  //  Config
+  private static $conf = null;
+
+  /**
+   * @var Router\RouterInterface
+   */
+  private static $httpRouter = null;
+
+  /**
+   * Handle HTTP request
+   */
+  public static function handleHttpRequest()
+  {
+    // Create request
+    $request = Request::createFromGlobals();
+
+    // Route
+    if (is_null(self::$httpRouter))
+    {
+      $routerName = Config::$options['httpRouter'];
+      self::$httpRouter = new $routerName;
+    }
+    //
+    self::$httpRouter->route($request);
+    $controller = self::$httpRouter->getController();
+    $action = self::$httpRouter->getAction();
+
+    // Call controller
+    $controller = new $controller;
+    $response = $controller->$action($request);
+
+    // Send response
+    $response->send();
+  }
 
   /**
    * Initialize ymF
@@ -99,7 +136,7 @@ class Kernel
    */
   public static function getLibraryPath($library)
   {
-    return Config::get('libraries.' . $library);
+    return Config::$options['libraries'][$library];
   }
 
   /**
