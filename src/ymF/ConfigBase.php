@@ -20,7 +20,7 @@ abstract class ConfigBase
   /**
    * Called on first load
    */
-  public static function init(){}
+  public static function selfInit(){}
 
   /**
    * Get option / all options

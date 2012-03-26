@@ -61,12 +61,12 @@ class Kernel
    * Initialize ymF
    *
    */
-  public static function init()
+  public static function selfInit()
   {
     // Define version
 
     // major.minor<.change>< status>
-    define('ymF\VERSION', '0.8');
+    define('ymF\VERSION', '0.8 c');
 
     // Define paths:
 
@@ -129,6 +129,15 @@ class Kernel
   }
 
   /**
+   * Post-load initialisation
+   */
+  public static function init()
+  {
+    self::registerAutoloadNamespace('Symfony\Component\HttpFoundation',
+      self::getLibraryPath('SymfonyComponents_HttpFoundation'));
+  }
+
+  /**
    * Get library path
    *
    * @param string $library
@@ -150,7 +159,7 @@ class Kernel
     $namespace, $root = null, $relocate_config = false)
   {
     self::$autoload[$namespace] = array(
-      'root'          => is_null($root) ? PATH_MODULES : $root,
+      'root'          => $root,
       'config_reloc'  => $relocate_config
     );
   }
@@ -161,9 +170,9 @@ class Kernel
    * Something\Another\Config - from core\configs\Something.Another.Config.php
    * Something\Another\Class - from core\modules\Something\Another\Class.php
    *
-   * @param string $class_name
+   * @param string $className
    */
-  public static function autoload($class_name)
+  public static function autoload($className)
   {
     // Load only registered namespaces
 
@@ -171,7 +180,7 @@ class Kernel
 
     foreach (self::$autoload as $namespace => $options)
     {
-      if (substr($class_name, 0, strlen($namespace)) == $namespace)
+      if (substr($className, 0, strlen($namespace)) == $namespace)
       {
         $registered = true;
         break;
@@ -183,24 +192,26 @@ class Kernel
       // Check class name for double slashes
       // (Valid in file path, but invalid in classs names)
 
-      if (preg_match('#[\\\\\\/][\\\\\\/]#', $class_name))
-        throw new Exception("Invalid class name '$class_name'", ERROR_MISC);
+      if (preg_match('#[\\\\\\/][\\\\\\/]#', $className))
+        throw new Exception("Invalid class name '$className'", ERROR_MISC);
 
-      if ($options['config_reloc'] && ($class_name === 'Config' || substr($class_name, -7) == '\\Config'))
+      if ($options['config_reloc'] && ($className === 'Config' || substr($className, -7) == '\\Config'))
       {
         // Load configs from
         // Kernel\configs\namespace.subnamespace.Config.php
         $path = PATH_CONFIGURATION . '/' .
-          str_replace('\\', '.', $class_name) . '.php';
+          str_replace('\\', '.', $className) . '.php';
       }
       else
       {
-        // Full path to class file
-        $path = $options['root'] . '/' . str_replace('\\', '/', $class_name) . '.php';
+        // trim path
+        $className = substr($className, 1 + strlen($namespace));
+
+        // full path to class file
+        $path = $options['root'] . '/' . str_replace('\\', '/', $className) . '.php';
       }
 
-      // Include file
-
+      // include file
       if (!file_exists($path) || !include($path))
         return false;
 
@@ -211,4 +222,4 @@ class Kernel
   }
 }
 
-Kernel::init();
+Kernel::selfInit();

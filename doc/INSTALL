@@ -1,1 +1,1 @@
-* Symfony\Components\HttpFoundation must be present to use provided routers
+* Symfony HttpFoundation must be present in libarries
