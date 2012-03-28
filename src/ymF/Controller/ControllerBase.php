@@ -6,15 +6,8 @@ use Symfony\Component\HttpFoundation\Response;
 use ymF\Helper\TwigHelper;
 use ymF\Config;
 
-abstract class TwigController
+abstract class ControllerBase
 {
-  private $conf;
-
-  public function __construct()
-  {
-    $this->conf = Config::$options["TwigController"];
-  }
-
   /**
    * Render data
    *
@@ -33,7 +26,7 @@ abstract class TwigController
   public function createPublicResponse($data = array())
   {
     $response = new Response($this->render($data));
-    $response->setPublic()->setSharedMaxAge($this->conf["responseSharedMaxAge"]);
+    $response->setPublic()->setSharedMaxAge(Config::$options["ControllerBase"]["responseSharedMaxAge"]);
     return $response;
   }
 
