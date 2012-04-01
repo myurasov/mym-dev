@@ -5,60 +5,59 @@ namespace ymF\Router;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
+use ymF\Exception\NotFoundException;
+
 class DefaultRouter implements RouterInterface
 {
-  protected $action = null;
-  protected $controller = null;
+  private $controller;
+  private $action;
 
-  /**
-   * Get controller funciton
-   *
-   * @return string
-   */
-  public function getAction()
-  {
-    return $this->action;
-  }
-
-  /**
-   * Get controller class name
-   *
-   * @return string
-   */
-  public function getController()
-  {
-    return $this->controller;
-  }
-
-  /**
-   * Route request
-   *
-   * @param Request $request
-   * @return RouterInterface
-   */
   public function route(Request $request)
   {
-    $path = $request->getPathInfo();
+    $matches = array();
+    $controller = "";
+    $action = "";
 
-    $controller = null;
-    $action = null;
+    $path = $request->getPathInfo();
 
     if ($path == "/")
     {
       $controller = "Index";
       $action = "default";
     }
+    else if (preg_match("#/([a-z/]+?)(?:/([a-z]+))?/?$#i", $path, $matches)) // fallback
+    {
+      $controller = $matches[1];
+      $action = count($matches) > 2 ? $matches[2] : "default";
+    }
     else
     {
-      throw new \Exception("Route not found");
+      throw new NotFoundException();
     }
 
-    $controller = \ymF\PROJECT_NAME . "\Controller\\" . $controller . "Controller";
+    $controller = \ymF\PROJECT_NAME . "\Controller\\" . $controller;
     $action = $action . "Action";
-    
-    $this->action = $action;
-    $this->controller = $controller;
+
+    if (class_exists($controller) && in_array($action, get_class_methods($controller)))
+    {
+      $this->action = $action;
+      $this->controller = $controller;
+    }
+    else
+    {
+      throw new NotFoundException();
+    }
 
     return $this;
+  }
+
+  public function getController()
+  {
+    return $this->controller;
+  }
+
+  public function getAction()
+  {
+    return $this->action;
   }
 }

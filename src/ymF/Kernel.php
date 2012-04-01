@@ -12,6 +12,9 @@ namespace ymF;
 use ymF\Exception\Exception;
 
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+
+use ymF\Exception\NotFoundException;
 
 /**
  * ymF Kernel class
@@ -26,34 +29,42 @@ class Kernel
   private static $conf = null;
 
   /**
-   * @var Router\RouterInterface
-   */
-  private static $httpRouter = null;
-
-  /**
    * Handle HTTP request
    */
   public static function handleHttpRequest()
   {
-    // Create request
-    $request = Request::createFromGlobals();
-
-    // Route
-    if (is_null(self::$httpRouter))
+    try
     {
-      $routerName = Config::$options['httpRouter'];
-      self::$httpRouter = new $routerName;
+      // create request
+      $request = Request::createFromGlobals();
+
+      // Route
+
+      $httpRouter = Config::$options['httpRouter'];
+      $httpRouter = new $httpRouter;
+
+      $httpRouter->route($request);
+      $controller = $httpRouter->getController();
+      $action = $httpRouter->getAction();
+
+      // Call controller
+
+      $controller = new $controller;
+      $response = $controller->$action($request);
+
+      if (!($response instanceof Response))
+        throw new Exception("Response object should be returned");
     }
-    //
-    self::$httpRouter->route($request);
-    $controller = self::$httpRouter->getController();
-    $action = self::$httpRouter->getAction();
+    catch (NotFoundException $e)
+    {
+      $response = new Response($e->getMessage(), 404);
+    }
+    catch (Exception $e)
+    {
+      $response = new Response($e->getMessage(), 500);
+    }
 
-    // Call controller
-    $controller = new $controller;
-    $response = $controller->$action($request);
-
-    // Send response
+    // send response
     $response->send();
   }
 
