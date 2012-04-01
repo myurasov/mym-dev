@@ -350,7 +350,7 @@ class Strings
 
   /**
    * Get number representation in the specified radix
-   * 
+   *
    * @param integer $number
    * @param string $alphabet
    * @return string
@@ -383,7 +383,7 @@ class Strings
 
   /**
    * Create string from random characters
-   * 
+   *
    * @param int $length
    * @param string $alphabet
    * @param int $bitStrength If $bitStrength is passed, $length is computed based on it
