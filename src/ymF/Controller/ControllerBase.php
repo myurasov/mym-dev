@@ -14,31 +14,12 @@ abstract class ControllerBase
    * @param array $data
    * @return string
    */
-  public function render($data = array())
+  public function renderWithTwig($data = array())
   {
     $className = get_called_class();
     $className = substr($className, strrpos($className, "\\") + 1);
     $templateName = substr($className, 0, strrpos($className, "Controller")) . ".twig";
     $content = TwigHelper::renderTemplate($templateName, $data);
     return $content;
-  }
-
-  public function createPublicResponse($data = array())
-  {
-    $response = new Response($this->render($data));
-    $response->setPublic()->setSharedMaxAge(Config::$options["ControllerBase"]["responseSharedMaxAge"]);
-    return $response;
-  }
-
-  public function createPrivateResponse($data = array())
-  {
-    $response = new Response($this->render($data));
-    $response->setPrivate();
-    return $response;
-  }
-
-  public function createResponse($data)
-  {
-    return $this->createPublicResponse($data);
   }
 }
