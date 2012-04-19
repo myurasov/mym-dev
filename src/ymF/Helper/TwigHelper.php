@@ -6,7 +6,7 @@
  * Requires Twig library, version 0.9.3+,
  * downloaded from www.twig-project.org
  *
- * @copyright 2010-2011 Misha Yurasov
+ * @copyright 2010-2012 Misha Yurasov
  * @package ymF
  */
 
@@ -62,20 +62,6 @@ class TwigHelper
   public static function getTemplatesDir()
   {
     return Config::$options['TwigHelper']['templatesDir'];
-  }
-
-  /**
-   * Renders template
-   *
-   * @param string $templateName
-   * @param array $data
-   * @return string
-   */
-  public static function renderTemplate($templateName, $data = array())
-  {
-    $twig = self::getTwigEnviroment();
-    $template = $twig->loadTemplate($templateName);
-    return $template->render($data);
   }
 
   /**
