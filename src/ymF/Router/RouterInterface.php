@@ -9,7 +9,7 @@ interface RouterInterface
   /**
    * @return RouterInterface
    */
-  public function route(Request $request);
+  public function route(Request &$request);
 
   /**
    * Get controller funciton
