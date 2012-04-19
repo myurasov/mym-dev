@@ -25,7 +25,7 @@ class DefaultRouter implements RouterInterface
       $controller = "Index";
       $action = "index";
     }
-    else if (preg_match("#/([a-z/]+?)(?:/([a-z]+))?/?$#i", $path, $matches)) // fallback
+    else if (preg_match("#/([a-z0-9/]+?)(?:/([a-z0-9]+))?/?$#i", $path, $matches)) // fallback
     {
       $controller = $matches[1];
       $action = count($matches) > 2 ? $matches[2] : "default";
@@ -35,7 +35,7 @@ class DefaultRouter implements RouterInterface
       throw new NotFoundException();
     }
 
-    $controller = \ymF\PROJECT_NAME . "\Controller\\" . $controller . "Controller";
+    $controller = "Project\Controller\\" . $controller . "Controller";
     $action = $action . "Action";
 
     if (class_exists($controller) && in_array($action, get_class_methods($controller)))
