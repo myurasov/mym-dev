@@ -15,7 +15,7 @@ use ymF\Exception\InternalException;
 
 abstract class ConfigBase
 {
-  public static $options = array();
+  protected static $options = array();
 
   /**
    * Called on first load
