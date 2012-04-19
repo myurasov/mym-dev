@@ -59,7 +59,7 @@ class Kernel
     {
       $response = new Response($e->getMessage(), 404);
     }
-    catch (Exception $e)
+    catch (\Exception $e)
     {
       $response = new Response($e->getMessage(), 500);
     }
@@ -77,7 +77,14 @@ class Kernel
     // Define version
 
     // major.minor<.change>< status>
-    define('ymF\VERSION', '0.8');
+    define('ymF\VERSION', '0.8-dev');
+
+    if (!defined('ymF\DEVELOPMENT'))
+      define('ymF\DEVELOPMENT', false);
+
+    // relocate ymF config?
+    if (!defined('ymF\RELOC_CONFIG'))
+      define ('ymF\RELOC_CONFIG', true);
 
     // Define paths:
 
@@ -137,6 +144,9 @@ class Kernel
 
     // Register autoloader function
     spl_autoload_register(__CLASS__ . '::autoload');
+
+    // Register ymF autoloading
+    self::registerAutoloadNamespace('ymF', __DIR__, RELOC_CONFIG);
   }
 
   /**
