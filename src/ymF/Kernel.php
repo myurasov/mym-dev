@@ -92,6 +92,9 @@ class Kernel
     // major.minor<.change>< status>
     define('ymF\VERSION', '0.8-dev');
 
+    if (!defined('ymF\HOSTNAME'))
+      define('ymF\HOSTNAME', 'localhost');
+
     if (!defined('ymF\DEVELOPMENT'))
       define('ymF\DEVELOPMENT', false);
 
