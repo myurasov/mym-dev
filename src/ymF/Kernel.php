@@ -31,10 +31,11 @@ class Kernel
   /**
    * Handle HTTP request
    */
-  public static function handleHttpRequest()
+  public static function handleHttpRequest($catchExceptions = true)
   {
-    try
-    {
+    $response = null;
+
+    $processRequest = function() use (&$response) {
       // create request
       $request = Request::createFromGlobals();
 
@@ -54,14 +55,26 @@ class Kernel
 
       if (!($response instanceof Response))
         throw new Exception("Response object should be returned");
-    }
-    catch (NotFoundException $e)
+    };
+
+    if ($catchExceptions)
     {
-      $response = new Response($e->getMessage(), 404);
+      try
+      {
+        $processRequest();
+      }
+      catch (NotFoundException $e)
+      {
+        $response = new Response($e->getMessage(), 404);
+      }
+      catch (\Exception $e)
+      {
+        $response = new Response($e->getMessage(), 500);
+      }
     }
-    catch (\Exception $e)
+    else
     {
-      $response = new Response($e->getMessage(), 500);
+      $processRequest();
     }
 
     // send response
