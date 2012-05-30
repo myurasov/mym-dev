@@ -14,7 +14,7 @@ use ymF\Exception\Exception;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-use ymF\Exception\NotFoundException;
+use ymF\Exception\HTTPException;
 
 /**
  * ymF Kernel class
@@ -63,9 +63,9 @@ class Kernel
       {
         $processRequest();
       }
-      catch (NotFoundException $e)
+      catch (HTTPException $e)
       {
-        $response = new Response($e->getMessage(), 404);
+        $response = new Response($e->getMessage(), $e->getCode());
       }
       catch (\Exception $e)
       {

@@ -9,11 +9,11 @@
 
 namespace ymF\Exception;
 
-use ymF\Exception\Exception;
+use ymF\Exception\HTTPException;
 
-class NotFoundException extends Exception
+class NotFoundException extends HTTPException
 {
-  public function __construct($message = "Not found", $code = null, $previous = null)
+  public function __construct($message = "Not found", $code = 404, $previous = null)
   {
     parent::__construct($message, $code, $previous);
   }
