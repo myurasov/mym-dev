@@ -12,31 +12,36 @@ class DefaultRouter implements RouterInterface
   private $controller;
   private $action;
 
-  public function route(Request $request)
+  public function route(Request &$request)
   {
     $matches = array();
-    $controller = "";
-    $action = "";
+    $controller = '';
+    $action = '';
 
     $path = $request->getPathInfo();
 
-    if ($path == "/")
+    // remove trailing slash
+    if (substr($path, -1) == '/')
+      $path = substr($path, 0, strlen($path) - 1);
+
+    if ($path == '')
     {
-      $controller = "Index";
-      $action = "index";
+      $controller = 'Index';
+      $action = 'index';
     }
-    else if (preg_match("#/([a-z0-9/]+?)(?:/([a-z0-9]+))?/?$#i", $path, $matches)) // fallback
+    // fallback
+    else if (preg_match('#^/([a-z0-9/]+?)(?:/([a-z0-9]+))?$#i', $path, $matches))
     {
       $controller = $matches[1];
-      $action = count($matches) > 2 ? $matches[2] : "default";
+      $action = count($matches) > 2 ? $matches[2] : 'index';
     }
     else
     {
       throw new NotFoundException();
     }
 
-    $controller = "Project\Controller\\" . $controller . "Controller";
-    $action = $action . "Action";
+    $controller = \ymF\PROJECT_NAME . '\Controller\\' . $controller . 'Controller';
+    $action = $action . 'Action';
 
     if (class_exists($controller) && in_array($action, get_class_methods($controller)))
     {
@@ -45,7 +50,7 @@ class DefaultRouter implements RouterInterface
     }
     else
     {
-      throw new NotFoundException();
+      throw new NotFoundException("Controller \"$controller::$action\" not found");
     }
 
     return $this;
