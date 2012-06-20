@@ -13,6 +13,7 @@ use ymF\Exception\Exception;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 use ymF\Exception\HTTPException;
 
@@ -33,9 +34,10 @@ class Kernel
    */
   public static function handleHttpRequest($catchExceptions = true)
   {
-    $response = null;
+    $request;
+    $response;
 
-    $processRequest = function() use (&$response) {
+    $processRequest = function() use (&$request, &$response) {
       // create request
       $request = Request::createFromGlobals();
 
@@ -63,13 +65,27 @@ class Kernel
       {
         $processRequest();
       }
-      catch (HTTPException $e)
-      {
-        $response = new Response($e->getMessage(), $e->getCode());
-      }
       catch (\Exception $e)
       {
-        $response = new Response($e->getMessage(), 500);
+        // determine acceptable content types
+        $acceptableTypes = $request->getAcceptableContentTypes();
+
+        // http code
+        $httpCode = ($e instanceof HTTPException) ? $e->getCode() : 500;
+
+        if (isset($acceptableTypes[0]) && $acceptableTypes[0] == 'application/json')
+        {
+          // return JSON
+          $response = new JsonResponse(array(
+            'error' => $e->getCode(),
+            'message' => $e->getMessage()
+          ), $httpCode);
+        }
+        else
+        {
+          // return text/html
+          $response = new Response($e->getMessage(), $httpCode);
+        }
       }
     }
     else
