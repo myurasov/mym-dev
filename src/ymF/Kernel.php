@@ -73,7 +73,7 @@ class Kernel
         // http code
         $httpCode = ($e instanceof HTTPException) ? $e->getCode() : 500;
 
-        if (isset($acceptableTypes[0]) && $acceptableTypes[0] == 'application/json')
+        if (is_array($acceptableTypes) && in_array('application/json', $acceptableTypes))
         {
           // return JSON
           $response = new JsonResponse(array(
