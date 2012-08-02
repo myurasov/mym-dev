@@ -1,6 +1,6 @@
 <?php
 
-namespace ymF\Router;
+namespace mym\Router;
 
 use Symfony\Component\HttpFoundation\Request;
 

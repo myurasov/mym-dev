@@ -5,13 +5,13 @@
  * Should be inherited only by static classes
  *
  * @copyright 2010 Misha Yurasov
- * @package ymF
+ * @package mym
  */
 
-namespace ymF;
+namespace mym;
 
-use ymF\Exception\Exception;
-use ymF\Exception\InternalException;
+use mym\Exception\Exception;
+use mym\Exception\InternalException;
 
 abstract class ConfigBase
 {
@@ -44,7 +44,7 @@ abstract class ConfigBase
         }
         catch (InternalException $e)
         {
-          throw new Exception("Option '$option_name' doesn't exist", \ymF\ERROR_MISC);
+          throw new Exception("Option '$option_name' doesn't exist", \mym\ERROR_MISC);
         }
       }
       else // Top-level name
@@ -55,7 +55,7 @@ abstract class ConfigBase
         }
         else
         {
-          throw new Exception("Option '$option_name' doesn't exist", \ymF\ERROR_MISC);
+          throw new Exception("Option '$option_name' doesn't exist", \mym\ERROR_MISC);
         }
       }
     }

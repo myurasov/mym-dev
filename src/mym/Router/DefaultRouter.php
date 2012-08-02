@@ -1,11 +1,11 @@
 <?php
 
-namespace ymF\Router;
+namespace mym\Router;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-use ymF\Exception\NotFoundException;
+use mym\Exception\NotFoundException;
 
 class DefaultRouter implements RouterInterface
 {
@@ -40,7 +40,7 @@ class DefaultRouter implements RouterInterface
       throw new NotFoundException();
     }
 
-    $controller = \ymF\PROJECT_NAME . '\Controller\\' . $controller . 'Controller';
+    $controller = \mym\PROJECT_NAME . '\Controller\\' . $controller . 'Controller';
     $action = $action . 'Action';
 
     if (class_exists($controller) && in_array($action, get_class_methods($controller)))

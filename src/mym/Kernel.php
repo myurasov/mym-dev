@@ -1,24 +1,24 @@
 <?php
 
 /**
- * ym Framework main file
+ * mym Framework main file
  *
  * @copyright Misha Yurasov 2009-2011
- * @package ymF
+ * @package mym
  */
 
-namespace ymF;
+namespace mym;
 
-use ymF\Exception\Exception;
+use mym\Exception\Exception;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
-use ymF\Exception\HTTPException;
+use mym\Exception\HTTPException;
 
 /**
- * ymF Kernel class
+ * mym Kernel class
  *
  */
 class Kernel
@@ -98,7 +98,7 @@ class Kernel
   }
 
   /**
-   * Initialize ymF
+   * Initialize mym
    *
    */
   public static function selfInit()
@@ -106,99 +106,79 @@ class Kernel
     // Define version
 
     // major.minor<.change>< status>
-    define('ymF\VERSION', '0.8-dev');
+    define('mym\VERSION', '0.8-dev');
 
-    if (!defined('ymF\HOSTNAME'))
-      define('ymF\HOSTNAME', 'localhost');
+    if (!defined('mym\HOSTNAME'))
+      define('mym\HOSTNAME', 'localhost');
 
-    if (!defined('ymF\DEVELOPMENT'))
-      define('ymF\DEVELOPMENT', false);
+    if (!defined('mym\DEVELOPMENT'))
+      define('mym\DEVELOPMENT', false);
 
-    // relocate ymF config?
-    if (!defined('ymF\RELOC_CONFIG'))
-      define ('ymF\RELOC_CONFIG', true);
+    // relocate mym config?
+    if (!defined('mym\RELOC_CONFIG'))
+      define ('mym\RELOC_CONFIG', true);
 
     // Define paths:
 
     // Project root directory
 
-    if (!defined('ymF\PATH_ROOT'))
-      define('ymF\PATH_ROOT', realpath(__DIR__ . '/../../..'));
+    if (!defined('mym\PATH_ROOT'))
+      define('mym\PATH_ROOT', realpath(__DIR__ . '/../../..'));
 
     // Core executable files
-    if (!defined('ymF\PATH_SRC'))
-      define('ymF\PATH_SRC', PATH_ROOT . '/src');
+    if (!defined('mym\PATH_SRC'))
+      define('mym\PATH_SRC', PATH_ROOT . '/src');
 
     // Web documents
-    if (!defined('ymF\PATH_WWW'))
-      define('ymF\PATH_WWW', PATH_SRC . '/www');
+    if (!defined('mym\PATH_WWW'))
+      define('mym\PATH_WWW', PATH_SRC . '/www');
 
     // Command-line interface
-    if (!defined('ymF\PATH_CLI'))
-      define('ymF\PATH_CLI', PATH_SRC . '/cli');
+    if (!defined('mym\PATH_CLI'))
+      define('mym\PATH_CLI', PATH_SRC . '/cli');
 
     // Variable application data
-    if (!defined('ymF\PATH_DATA'))
-      define('ymF\PATH_DATA', PATH_ROOT . '/data');
+    if (!defined('mym\PATH_DATA'))
+      define('mym\PATH_DATA', PATH_ROOT . '/data');
 
     // Temporary data
-    if (!defined('ymF\PATH_TEMP'))
-      define('ymF\PATH_TEMP', PATH_DATA . '/temp');
+    if (!defined('mym\PATH_TEMP'))
+      define('mym\PATH_TEMP', PATH_DATA . '/temp');
 
     // Code modules and root namespace
-    if (!defined('ymF\PATH_MODULES'))
-      define('ymF\PATH_MODULES', PATH_SRC . '/modules');
+    if (!defined('mym\PATH_MODULES'))
+      define('mym\PATH_MODULES', PATH_SRC . '/modules');
 
     // Templates
-    if (!defined('ymF\PATH_TEMPLATES'))
-      define('ymF\PATH_TEMPLATES', PATH_SRC . '/templates');
+    if (!defined('mym\PATH_TEMPLATES'))
+      define('mym\PATH_TEMPLATES', PATH_SRC . '/templates');
 
     // Resource files
-    if (!defined('ymF\PATH_RESOURCES'))
-      define('ymF\PATH_RESOURCES', PATH_SRC . '/resources');
+    if (!defined('mym\PATH_RESOURCES'))
+      define('mym\PATH_RESOURCES', PATH_SRC . '/resources');
 
     // Bundled libraries
-    if (!defined('ymF\PATH_LIBRARIES'))
-      define('ymF\PATH_LIBRARIES', PATH_SRC . '/libraries');
+    if (!defined('mym\PATH_LIBRARIES'))
+      define('mym\PATH_LIBRARIES', PATH_SRC . '/libraries');
 
     // Config classes
-    if (!defined('ymF\PATH_CONFIGURATION'))
-      define('ymF\PATH_CONFIGURATION', PATH_SRC . '/configs');
+    if (!defined('mym\PATH_CONFIGURATION'))
+      define('mym\PATH_CONFIGURATION', PATH_SRC . '/configs');
 
     // Logs
-    if (!defined('ymF\PATH_LOGS'))
-      define('ymF\PATH_LOGS', PATH_DATA . '/logs');
+    if (!defined('mym\PATH_LOGS'))
+      define('mym\PATH_LOGS', PATH_DATA . '/logs');
 
     // Define errors:
 
-    define('ymF\ERROR_OK', 0);
-    define('ymF\ERROR_MISC', -1);
+    define('mym\ERROR_OK', 0);
+    define('mym\ERROR_MISC', -1);
 
     // Register autoloader function
     spl_autoload_register(__CLASS__ . '::autoload');
 
-    // Register ymF autoloading
-    self::registerAutoloadNamespace('ymF', __DIR__, RELOC_CONFIG);
-  }
-
-  /**
-   * Post-load initialisation
-   */
-  public static function init()
-  {
-    self::registerAutoloadNamespace('Symfony\Component\HttpFoundation',
-      self::getLibraryPath('SymfonyComponents_HttpFoundation'));
-  }
-
-  /**
-   * Get library path
-   *
-   * @param string $library
-   * @return string
-   */
-  public static function getLibraryPath($library)
-  {
-    return Config::$options['libraries'][$library];
+    // Register mym autoloading
+    self::registerAutoloadNamespace('mym', __DIR__, RELOC_CONFIG);
   }
 
   /**
@@ -206,14 +186,14 @@ class Kernel
    *
    * @param <type> $namespace
    * @param <type> $root
-   * @param <type> $relocate_config Search configs in ymF\PATH_CONFIGURATION as namespace.subnamespace.Config.php
+   * @param <type> $relocateConfig Search configs in mym\PATH_CONFIGURATION as namespace.subnamespace.Config.php
    */
   public static function registerAutoloadNamespace(
-    $namespace, $root = null, $relocate_config = false)
+    $namespace, $root = null, $relocateConfig = false)
   {
     self::$autoload[$namespace] = array(
       'root'          => $root,
-      'config_reloc'  => $relocate_config
+      'config_reloc'  => $relocateConfig
     );
   }
 

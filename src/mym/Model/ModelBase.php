@@ -4,14 +4,14 @@
  * Models base class
  * 
  * @copyright 2010 Misha Yurasov
- * @package ymF
+ * @package mym
  */
 
-namespace ymF\Model;
+namespace mym\Model;
 
-use ymF\Storage;
-use ymF\Helper\PDOHelper;
-use ymF\Exception\Exception;
+use mym\Storage;
+use mym\Helper\PDOHelper;
+use mym\Exception\Exception;
 
 abstract class ModelBase extends Storage
 {
@@ -130,7 +130,7 @@ abstract class ModelBase extends Storage
     if (is_null($id))
     {
       throw new Exception(get_called_class() . '::' . $this->idKey .
-              ' is NULL', \ymF\ERROR_MISC);
+              ' is NULL', \mym\ERROR_MISC);
     }
 
     $pdo = PDOHelper::getPDO();
@@ -192,7 +192,7 @@ abstract class ModelBase extends Storage
       $this->data[$this->idKey] = $id;
 
     if (is_null($this->data[$this->idKey]))
-      throw new Exception(get_called_class() . '::' . $this->idKey . ' is NULL', ymF\ERROR_MISC);
+      throw new Exception(get_called_class() . '::' . $this->idKey . ' is NULL', mym\ERROR_MISC);
 
     $pdo = PDOHelper::getPDO();
 

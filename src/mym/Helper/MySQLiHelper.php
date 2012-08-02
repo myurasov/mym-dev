@@ -6,13 +6,13 @@
  * Requires MySQLi php extension
  *
  * @copyright 2010-2011 Misha Yurasov
- * @package ymF
+ * @package mym
  */
 
-namespace ymF\Helper;
+namespace mym\Helper;
 
-use ymF\Helper\Config;
-use ymF\Exception\Exception;
+use mym\Helper\Config;
+use mym\Exception\Exception;
 
 class MySQLiHelper
 {
@@ -61,7 +61,7 @@ class MySQLiHelper
 
     if (is_null(self::$mysqli))
     {
-      throw new Exception('mysqli instance is not yet created', \ymF\ERROR_MISC);
+      throw new Exception('mysqli instance is not yet created', \mym\ERROR_MISC);
     }
 
     $arguments = func_get_args();
@@ -136,7 +136,7 @@ class MySQLiHelper
 
     if (is_null(self::$mysqli))
     {
-      throw new Exception('mysqli instance is not yet created', \ymF\ERROR_MISC);
+      throw new Exception('mysqli instance is not yet created', \mym\ERROR_MISC);
     }
 
     if (is_bool($var))

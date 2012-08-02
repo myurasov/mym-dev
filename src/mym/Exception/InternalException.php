@@ -4,11 +4,11 @@
  * Internal exception
  *
  * @copyright 2010 Misha Yurasov
- * @package ymF
+ * @package mym
  */
 
-namespace ymF\Exception;
+namespace mym\Exception;
 
-use ymF\Exception\Exception;
+use mym\Exception\Exception;
 
 class InternalException extends Exception {}

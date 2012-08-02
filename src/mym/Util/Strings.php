@@ -4,10 +4,10 @@
  * String utils
  *
  * @copyright 2010-2011 Misha Yurasov
- * @package ymF
+ * @package mym
  */
 
-namespace ymF\Util;
+namespace mym\Util;
 
 class Strings
 {

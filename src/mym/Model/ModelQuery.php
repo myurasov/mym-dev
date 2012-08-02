@@ -1,9 +1,9 @@
 <?php
 
-namespace ymF\Model;
+namespace mym\Model;
 
-use ymF\Helper\PDOHelper;
-use ymF\Config;
+use mym\Helper\PDOHelper;
+use mym\Config;
 
 class ModelQuery
 {

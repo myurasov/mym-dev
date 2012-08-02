@@ -4,13 +4,13 @@
  * Class for adding options to other classes
  *
  * @copyright 2010 Misha Yurasov
- * @package ymF
+ * @package mym
  */
 
-namespace ymF;
+namespace mym;
 
 use ArrayAccess;
-use ymF\Exception\Exception;
+use mym\Exception\Exception;
 
 class Storage implements ArrayAccess
 {
@@ -52,7 +52,7 @@ class Storage implements ArrayAccess
       }
       else
       {
-        throw new Exception("Data field '$field_name' doesn't exist", \ymF\ERROR_MISC);
+        throw new Exception("Data field '$field_name' doesn't exist", \mym\ERROR_MISC);
       }
     }
   }
@@ -84,7 +84,7 @@ class Storage implements ArrayAccess
       }
       else
       {
-        throw new Exception("Data field '$name' doesn't exist", \ymF\ERROR_MISC);
+        throw new Exception("Data field '$name' doesn't exist", \mym\ERROR_MISC);
       }
     }
 

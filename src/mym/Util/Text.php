@@ -4,11 +4,11 @@
  * Text utils
  *
  * @copyright 2010-2011 Misha Yurasov
- * @package ymF
+ * @package mym
  * @subpackage Util
  */
 
-namespace ymF\Util;
+namespace mym\Util;
 
 class Text
 {

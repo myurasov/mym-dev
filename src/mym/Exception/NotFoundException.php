@@ -4,12 +4,12 @@
  * Resource not found exception
  *
  * @copyright 2012 Mikhail Yurasov
- * @package ymF
+ * @package mym
  */
 
-namespace ymF\Exception;
+namespace mym\Exception;
 
-use ymF\Exception\HTTPException;
+use mym\Exception\HTTPException;
 
 class NotFoundException extends HTTPException
 {

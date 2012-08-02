@@ -7,10 +7,10 @@
  *
  * @uses Doctrine ORM 2.0
  * @copyright 2011 Misha Yurasov
- * @package ymF
+ * @package mym
  */
 
-namespace ymF\Helper;
+namespace mym\Helper;
 
 class Doctrine2SQLLogger implements \Doctrine\DBAL\Logging\SQLLogger
 {

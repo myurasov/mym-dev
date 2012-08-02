@@ -1,9 +1,9 @@
 <?php
 
-namespace ymF\Helper;
+namespace mym\Helper;
 
 use FirePHP;
-use ymF\Kernel;
+use mym\Kernel;
 
 class FirePHPHelper
 {
@@ -11,14 +11,14 @@ class FirePHPHelper
 
   /**
    * Get FirePHP instance
-   * 
+   *
    * @return FirePHP
    */
   public static function getFirePhp()
   {
     if (\is_null(self::$firePhp))
     {
-      require_once Kernel::getLibraryPath('FirePHP') .
+      require_once \mym\Config::$options['libraries']['FirePHP'] .
         '/lib/FirePHPCore/FirePHP.class.php';
 
       self::$firePhp = FirePHP::getInstance(true);

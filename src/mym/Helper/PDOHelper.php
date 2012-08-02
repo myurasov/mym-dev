@@ -6,14 +6,14 @@
  * Requires PDO php extension
  *
  * @copyright 2010 Misha Yurasov
- * @package ymF
+ * @package mym
  */
 
-namespace ymF\Helper;
+namespace mym\Helper;
 
 use PDO;
-use ymF\Helper\Config;
-use ymF\Exception\Exception;
+use mym\Helper\Config;
+use mym\Exception\Exception;
 
 class PDOHelper
 {
@@ -71,7 +71,7 @@ class PDOHelper
     }
     else
     {
-      throw new Exception('PDO instance already created', \ymF\ERROR_MISC);
+      throw new Exception('PDO instance already created', \mym\ERROR_MISC);
     }
   }
 
@@ -93,7 +93,7 @@ class PDOHelper
 
     if (is_null(self::$pdo))
     {
-      throw new Exception('PDO instance is not yet created', \ymF\ERROR_MISC);
+      throw new Exception('PDO instance is not yet created', \mym\ERROR_MISC);
     }
 
     $arguments = func_get_args();
@@ -169,7 +169,7 @@ class PDOHelper
 
     if (is_null(self::$pdo))
     {
-      throw new Exception('PDO instance is not yet created', \ymF\ERROR_MISC);
+      throw new Exception('PDO instance is not yet created', \mym\ERROR_MISC);
     }
 
     // Convert objects to string

@@ -1,6 +1,6 @@
 <?php
 
-namespace ymF\Helper;
+namespace mym\Helper;
 
 class GearmanHelper
 {
@@ -79,7 +79,7 @@ class GearmanHelper
    */
   public static function createFunction($name, $hostname = null)
   {
-    return \ymF\PROJECT_NAME . ':' .
+    return \mym\PROJECT_NAME . ':' .
       $name . (is_null($hostname) ? '' : "@$hostname");
   }
 }

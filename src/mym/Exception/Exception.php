@@ -1,12 +1,12 @@
 <?php
 
 /**
- * ymF exception
+ * mym exception
  *
  * @copyright 2011 Misha Yurasov
- * @package ymF
+ * @package mym
  */
 
-namespace ymF\Exception;
+namespace mym\Exception;
 
 class Exception extends \Exception {}

@@ -7,10 +7,10 @@
  * downloaded from www.twig-project.org
  *
  * @copyright 2010-2012 Misha Yurasov
- * @package ymF
+ * @package mym
  */
 
-namespace ymF\Helper;
+namespace mym\Helper;
 
 class TwigHelper
 {
@@ -29,7 +29,7 @@ class TwigHelper
     if (!class_exists('Twig_Autoloader', false))
     {
       // Load Twig library
-      require \ymF\Config::$options['libraries']['Twig']
+      require \mym\Config::$options['libraries']['Twig']
         . '/lib/Twig/Autoloader.php';
 
       // Register twig autoloader

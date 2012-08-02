@@ -4,15 +4,15 @@
  * Command-line interface utility class
  *
  * @copyright 2010-2011 Misha Yurasov
- * @package ymF
+ * @package mym
  */
 
-namespace ymF\CLI;
+namespace mym\CLI;
 
-use ymF\Storage;
-use ymF\Exception\Exception;
-use ymF\Util\Strings;
-use ymF\Util\Text;
+use mym\Storage;
+use mym\Exception\Exception;
+use mym\Util\Strings;
+use mym\Util\Text;
 
 class CLIApplication
 {
@@ -66,7 +66,7 @@ class CLIApplication
   private $time_total = 0.0;                    // Total time
   private $started = false;                     // start() called
   private $ended = false;                       // end() called
-  
+
   // <editor-fold defaultstate="collapsed" desc="Default options">
 
   private $default_options = array(
@@ -164,14 +164,14 @@ class CLIApplication
   {
     if (!$this->parameters_read)
       $this->_read_parameters();
-    
+
     if (array_key_exists($name, $this->parameters))
     {
       return $this->parameters[$name];
     }
     else
     {
-      throw new Exception("Parameter '$name' is not declared or read", \ymF\ERROR_MISC);
+      throw new Exception("Parameter '$name' is not declared or read", \mym\ERROR_MISC);
     }
   }
 
@@ -199,7 +199,7 @@ class CLIApplication
   public function getTimePassed($return_as_string = false)
   {
     // Update time passed
-    
+
     if (!$this->ended)
       $this->time_total = microtime(true) - $this->time_started;
 
@@ -267,14 +267,14 @@ class CLIApplication
         break;
 
       default:
-        throw new Exception("Property '" . __CLASS__ . "::$name' doesn't exist", \ymF\ERROR_MISC);
+        throw new Exception("Property '" . __CLASS__ . "::$name' doesn't exist", \mym\ERROR_MISC);
         break;
     }
   }
 
   /**
    * Default properties setter
-   * 
+   *
    * @param string $name
    * @param mixed $value
    */
@@ -283,7 +283,7 @@ class CLIApplication
     switch ($name)
     {
       default:
-        throw new Exception("Property '" . __CLASS__ . "::$name' doesn't exist", \ymF\ERROR_MISC);
+        throw new Exception("Property '" . __CLASS__ . "::$name' doesn't exist", \mym\ERROR_MISC);
         break;
     }
   }
@@ -303,7 +303,7 @@ class CLIApplication
     // Output start message
 
     if ($this->options['status_start_message'] != '')
-      $this->status(str_replace('%time_current%', 
+      $this->status(str_replace('%time_current%',
         date($this->options['status_time_format']),
         $this->options['status_start_message']));
 
@@ -408,7 +408,7 @@ class CLIApplication
             $default_value = strval($declared_parameter['default']);
             break;
           }
-          
+
           case self::PARAM_TYPE_FLOAT:
           {
             $type_name = 'float';
@@ -447,13 +447,13 @@ class CLIApplication
 
           default:
           {
-            throw new Exception('Wrong parameter type for "' . $declared_parameter_name . '"', \ymF\ERROR_MISC);
+            throw new Exception('Wrong parameter type for "' . $declared_parameter_name . '"', \mym\ERROR_MISC);
             break;
           }
         }
 
         // Parameter usage
-        
+
         $text = sprintf("* %s [%s]; default: %s",
           $declared_parameter_name .
             ($declared_parameter['alias'] == $declared_parameter_name
@@ -487,7 +487,7 @@ class CLIApplication
    */
   public function resetProgress($options = array())
   {
-    if ($this->logging_options[self::LOG_PROGRESS] 
+    if ($this->logging_options[self::LOG_PROGRESS]
       || $this->verbocity_options[self::VERB_PROGRESS])
     {
       // Update options:
@@ -495,7 +495,7 @@ class CLIApplication
       $this->options->set($options);
 
       // Reset progress variables
-      
+
       $this->progress_tags['%total%'] = strval($this->options->get('progress_items_total'));
       $this->progress_tags['%title%'] = $this->options->get('progress_operation_title');
       $this->progress_last_time = 0.0;
@@ -677,7 +677,7 @@ class CLIApplication
   private function _message_log_enabled()
   {
     return $this->logging_options[self::MESSAGE_STATUS] ||
-      $this->logging_options[self::MESSAGE_ERROR] || 
+      $this->logging_options[self::MESSAGE_ERROR] ||
       $this->logging_options[self::MESSAGE_INFORMATION];
   }
 
@@ -1048,10 +1048,10 @@ class CLIApplication
       . self::VERB_PROGRESS;
 
     // Log file
-    $this->default_options['log_file'] = \ymF\PATH_LOGS . '/' . pathinfo($_SERVER['PHP_SELF'], PATHINFO_FILENAME) . '.log';
+    $this->default_options['log_file'] = \mym\PATH_LOGS . '/' . pathinfo($_SERVER['PHP_SELF'], PATHINFO_FILENAME) . '.log';
 
     // Progress file
-    $this->default_options['progress_file'] = \ymF\PATH_LOGS . '/' . pathinfo($_SERVER['PHP_SELF'], PATHINFO_FILENAME) . '.progress';
+    $this->default_options['progress_file'] = \mym\PATH_LOGS . '/' . pathinfo($_SERVER['PHP_SELF'], PATHINFO_FILENAME) . '.progress';
 
     // Progress file format
     $this->default_options['progress_log_format'] = "%title%\n\n%item%/%total% [%bar%] %percent%\n\n" .
@@ -1060,9 +1060,9 @@ class CLIApplication
 
   /**
    * Check if verbocity option is set
-   * 
+   *
    * @param string $name
-   * @return boolean 
+   * @return boolean
    */
   private function _have_verbocity_flag($name)
   {
@@ -1132,7 +1132,7 @@ class CLIApplication
     }
     else
     {
-      throw new Exception('Wrong parameter type for "' . $declared_parameter_name . '"', \ymF\ERROR_MISC);
+      throw new Exception('Wrong parameter type for "' . $declared_parameter_name . '"', \mym\ERROR_MISC);
     }
   }
 
@@ -1171,7 +1171,7 @@ class CLIApplication
     {
       if (is_null($declared_parameter['default']))
       {
-        throw new Exception('Unknown parameter type for "' . $declared_parameter_name . '"', \ymF\ERROR_MISC);
+        throw new Exception('Unknown parameter type for "' . $declared_parameter_name . '"', \mym\ERROR_MISC);
       }
       else
       {

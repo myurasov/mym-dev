@@ -1,6 +1,6 @@
 <?php
 
-namespace ymF\Util;
+namespace mym\Util;
 
 class Filesystem
 {

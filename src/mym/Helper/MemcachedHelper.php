@@ -1,8 +1,8 @@
 <?php
 
-namespace ymF\Helper;
+namespace mym\Helper;
 
-use ymF\Helper\Config;
+use mym\Helper\Config;
 
 class MemcachedHelper
 {

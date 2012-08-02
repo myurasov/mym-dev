@@ -7,10 +7,10 @@
  *
  * @uses Doctrine ORM 2.0
  * @copyright 2011 Misha Yurasov
- * @package ymF
+ * @package mym
  */
 
-namespace ymF\Helper;
+namespace mym\Helper;
 
 class Doctrine2Helper
 {
@@ -57,7 +57,7 @@ class Doctrine2Helper
     $classLoader->register();
 
     $classLoader = new \Doctrine\Common\ClassLoader('TestApp\Entities',
-      \ymF\PATH_MODULES . '/TestApp/Entities');
+      \mym\PATH_MODULES . '/TestApp/Entities');
     $classLoader->register();
 
     // Configure Doctrine
@@ -111,7 +111,7 @@ class Doctrine2Helper
     if (!self::$autoloadRegistered)
     {
       // Include Doctrine ClassLoader
-      $libraryPath = \ymF\Config::$options['libraries']['Doctrine2'];
+      $libraryPath = \mym\Config::$options['libraries']['Doctrine2'];
       require $libraryPath . '/Doctrine/Common/ClassLoader.php';
 
       // Register autoloader

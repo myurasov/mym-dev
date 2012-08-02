@@ -1,6 +1,6 @@
 <?php
 
-namespace ymF\CLI;
+namespace mym\CLI;
 
 /**
  * Cli command controls cli application
