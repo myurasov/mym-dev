@@ -106,7 +106,7 @@ class Kernel
     // Define version
 
     // major.minor<.change>< status>
-    define('mym\VERSION', '0.8-dev');
+    define('mym\VERSION', '0.9-dev');
 
     if (!defined('mym\HOSTNAME'))
       define('mym\HOSTNAME', 'localhost');
