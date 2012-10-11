@@ -24,7 +24,8 @@ class Facebook
   private $apiUrl; // last url used for api call
 
   /**
-   * @param array $params
+   * Constructor
+   * @param array $params [appId, secret, certFile]
    */
   public function __construct($params)
   {
@@ -80,17 +81,17 @@ class Facebook
       'response_type' => 'code',
       'display' => 'page' // page|popup
       ), $params, array(
-      'client_id' => $this->appId,
-      'state' => $this->state,
-      'response_type' => 'code'
-      ));
+        'client_id' => $this->appId,
+        'state' => $this->state,
+        'response_type' => 'code'
+    ));
 
     $url .= http_build_query($params);
 
     return $url;
   }
 
-  public function getAccessToken($code, $redirectUrl)
+  public function retrieveAccessToken($code, $redirectUrl)
   {
     if (!is_null($this->accessToken))
       return $this->accessToken;
@@ -180,6 +181,11 @@ class Facebook
     $this->accessToken = $accessToken;
   }
 
+  public function getAccessToken($accessToken)
+  {
+    $this->accessToken = $accessToken;
+  }
+
   public function setCertFile($certFile)
   {
     $this->certFile = $certFile;
@@ -209,4 +215,6 @@ class Facebook
   {
     $this->fetchApiContents = $fetchApiContents;
   }
+
+
 }
