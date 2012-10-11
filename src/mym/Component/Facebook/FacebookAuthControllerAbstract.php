@@ -87,8 +87,10 @@ abstract class FacebookAuthControllerAbstract {
 
     if (!$request->query->has('error')) {
       // start session
-      if (session_id() == '')
+      if (session_id() == '') {
         session_start();
+      }
+
       $response->setPrivate();
 
       // check csrf token
@@ -97,6 +99,9 @@ abstract class FacebookAuthControllerAbstract {
         throw new \Exception("States don't match");
 
       unset($_SESSION['facebookState']);
+
+      // end session
+      session_destroy();
 
       // get acces token
 
