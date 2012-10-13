@@ -23,6 +23,10 @@ abstract class FacebookAuthControllerAbstract {
     'certFile' => null
   );
 
+  private $scope = ''; // access scope
+
+  private $returnUrl; // return url
+
   public function loginAction(Request $request) {
     $response = new Response();
 
@@ -34,9 +38,9 @@ abstract class FacebookAuthControllerAbstract {
     $response->setPrivate();
 
     // url to return to
-    $returnUrl = $request->query->get(
+    $this->returnUrl = $request->query->get(
       'returnUrl',
-      $request->server->get('HTTP_REFERER')
+      $this->returnUrl ?: $request->server->get('HTTP_REFERER')
     );
 
     // get login url
@@ -45,8 +49,8 @@ abstract class FacebookAuthControllerAbstract {
 
     $url = $fb->getLoginUrl(array(
       'display' => 'popup',
-      'scope' => 'email,user_birthday',
-      'redirect_uri' => $this->getCallbackUrl($returnUrl)
+      'scope' => $this->scope,
+      'redirect_uri' => $this->getCallbackUrl()
     ));
 
     // save state (CSRF token)
@@ -68,12 +72,12 @@ abstract class FacebookAuthControllerAbstract {
     $response->headers->setCookie(new Cookie(session_name(), null));
 
     // url to return to
-    $returnUrl = $request->query->get(
+    $this->returnUrl = $request->query->get(
       'returnUrl',
-      $request->server->get('HTTP_REFERER')
+      $this->returnUrl ?: $request->server->get('HTTP_REFERER')
     );
 
-    $response->headers->set('Location', $returnUrl);
+    $response->headers->set('Location', $this->returnUrl);
 
     return $response;
   }
@@ -83,7 +87,7 @@ abstract class FacebookAuthControllerAbstract {
     $response = new Response();
 
     // url to return to
-    $returnUrl = $request->query->get('returnUrl');
+    $this->returnUrl = $request->query->get('returnUrl');
 
     if (!$request->query->has('error')) {
       // start session
@@ -109,7 +113,7 @@ abstract class FacebookAuthControllerAbstract {
 
       $facebookAccessToken = $fb->retrieveAccessToken(
         $request->query->get('code'),
-        $this->getCallbackUrl($returnUrl)
+        $this->getCallbackUrl()
       );
 
       $this->onAuthenticate($facebookAccessToken);
@@ -119,13 +123,13 @@ abstract class FacebookAuthControllerAbstract {
     }
 
     // redirect back
-    $response->headers->set("Location", $returnUrl);
+    $response->headers->set("Location", $this->returnUrl);
 
     return $response;
   }
 
-  public function getCallbackUrl($returnUrl) {
-    return $this->callbackUrl . '?returnUrl=' . urlencode($returnUrl);
+  public function getCallbackUrl() {
+    return $this->callbackUrl . '?returnUrl=' . urlencode($this->returnUrl);
   }
 
   /**
@@ -150,4 +154,21 @@ abstract class FacebookAuthControllerAbstract {
   public function setFacebookConfig($facebookConfig) {
     $this->facebookConfig = $facebookConfig;
   }
+
+  public function getScope() {
+    return $this->scope;
+  }
+
+  public function setScope($scope) {
+    $this->scope = $scope;
+  }
+
+  public function getReturnUrl() {
+    return $this->returnUrl;
+  }
+
+  public function setReturnUrl($returnUrl) {
+    $this->returnUrl = $returnUrl;
+  }
+
 }
