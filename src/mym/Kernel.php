@@ -106,7 +106,7 @@ class Kernel
     // Define version
 
     // major.minor<.change>< status>
-    define('mym\VERSION', '0.9-dev');
+    define('mym\VERSION', '0.10-dev');
 
     if (!defined('mym\HOSTNAME'))
       define('mym\HOSTNAME', 'localhost');
@@ -200,13 +200,18 @@ class Kernel
   /**
    * Loads required class on first usage
    *
-   * Something\Another\Config - from core\configs\Something.Another.Config.php
-   * Something\Another\Class - from core\modules\Something\Another\Class.php
+   * Something\Another\Config - Something.Another.Config.php
+   * Something\Another\Class - Something\Another\Class.php
    *
    * @param string $className
    */
   public static function autoload($className)
   {
+    // remove leading \
+    if (substr($className, 0, 1) == '\\') {
+      $className = substr($className, 1);
+    }
+
     // Load only registered namespaces
 
     $registered = false;
@@ -245,10 +250,13 @@ class Kernel
       }
 
       // include file
-      if (!file_exists($path) || !include($path))
-        return false;
+      if (file_exists($path)) {
+        if (include($path)) {
+          return true;
+        }
+      }
 
-      return true;
+      return false;
     }
 
     return false;
