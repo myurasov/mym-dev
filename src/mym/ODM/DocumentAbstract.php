@@ -8,6 +8,8 @@
 
 namespace mym\ODM;
 
+use Doctrine\ODM\MongoDB\DocumentManager;
+
 abstract class DocumentAbstract
 {
   /**
@@ -66,13 +68,13 @@ abstract class DocumentAbstract
   }
 
   /**
-   * Load document from request
-   *
-   * ?documentId
-   *
+   * Load document
+   * @param \Doctrine\ODM\MongoDB\DocumentManager $dm
+   * @param mixed $id
+   * @param bool $require
    * @throws \Exception
    */
-  public static function load($dm /* Doctrine ODM DocumentManager */, $id = '', $require = false)
+  public static function load(DocumentManager $dm, $id = '', $require = false)
   {
     $documentName = get_called_class();
     $document = null;
