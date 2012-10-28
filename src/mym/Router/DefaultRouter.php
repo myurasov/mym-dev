@@ -5,7 +5,7 @@ namespace mym\Router;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-use mym\Exception\NotFoundException;
+use mym\Exception\HttpNotFoundException;
 
 class DefaultRouter implements RouterInterface
 {
@@ -37,7 +37,7 @@ class DefaultRouter implements RouterInterface
     }
     else
     {
-      throw new NotFoundException();
+      throw new HttpNotFoundException();
     }
 
     $controller = \mym\PROJECT_NAME . '\Controller\\' . $controller . 'Controller';
@@ -50,7 +50,7 @@ class DefaultRouter implements RouterInterface
     }
     else
     {
-      throw new NotFoundException("Controller \"$controller::$action\" not found");
+      throw new HttpNotFoundException("Controller \"$controller::$action\" not found");
     }
 
     return $this;
