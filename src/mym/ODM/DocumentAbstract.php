@@ -74,7 +74,7 @@ abstract class DocumentAbstract
    * @param bool $require
    * @throws \Exception
    */
-  public static function load(DocumentManager $dm, $id = '', $require = false)
+  public static function _load(DocumentManager $dm, $id = '', $require = false)
   {
     $documentName = get_called_class();
     $document = null;

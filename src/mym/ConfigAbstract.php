@@ -13,14 +13,9 @@ namespace mym;
 use mym\Exception\Exception;
 use mym\Exception\InternalException;
 
-abstract class ConfigBase
+abstract class ConfigAbstract
 {
   protected static $options = array();
-
-  /**
-   * Called on first load
-   */
-  public static function selfInit(){}
 
   /**
    * Get option / all options
