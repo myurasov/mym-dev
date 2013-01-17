@@ -15,10 +15,11 @@ class AbstractService {
    * Call to Paypal API
    *
    * @param string $action action name
-   * @param string $nvPayload payload in NV format
+   * @param string/array $payload payload in NV format / array
    * @return array Decoded response envelope as assoc array
    */
-  protected function callAPI($action = "", $nvPayload = "") {
+  protected function callAPI($action = "", $payload) {
+    
     // endpoint url
     $endpointUrl = $this->configuration->getIsSandbox()
       ? Configuration::SANDBOX_ENDPOINT : Configuration::PRODUCTION_ENDPOINT;
@@ -34,7 +35,11 @@ class AbstractService {
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
     curl_setopt($ch, CURLOPT_POST, 1);
 
-    curl_setopt($ch, CURLOPT_POSTFIELDS, $nvPayload);
+    if (is_array($payload)) {
+      $payload = http_build_query($payload);
+    }
+
+    curl_setopt($ch, CURLOPT_POSTFIELDS, $payload);
 
     // Set the HTTP Headers
     curl_setopt($ch, CURLOPT_HTTPHEADER, array(
