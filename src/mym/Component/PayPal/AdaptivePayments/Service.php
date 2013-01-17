@@ -1,6 +1,7 @@
 <?php
 
 /**
+ * Adaptive Payments service
  * @copyright 2012, Mikhail Yurasov
  */
 
@@ -80,10 +81,12 @@ class Service extends AbstractService {
     for ($i = 0; $i < count($receivers); $i++) {
       $data["receiverList.receiver($i).amount"] = $receivers[$i]->getAmount();
       $data["receiverList.receiver($i).email"] = $receivers[$i]->getEmail();
-      $data["receiverList.receiver($i).isPrimary"] = $receivers[$i]->getIsPrimary();
+
+      if ($receivers[$i]->getIsPrimary()) {
+        $data["receiverList.receiver($i).isPrimary"] = "true";
+      }
     }
 
-    $data = http_build_query($data);
     return $this->callAPI("Pay", $data);
   }
 
