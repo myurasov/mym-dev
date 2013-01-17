@@ -1,6 +1,7 @@
 <?php
 
 /**
+ * Options for "Pay" action
  * @copyright 2012, Mikhail Yurasov
  */
 
@@ -8,11 +9,11 @@ namespace mym\Component\PayPal\AdaptivePayments;
 
 class PayOptions {
 
-  private $senderEmail = "";
+  private $senderEmail = null;
   private $receivers = array();
   private $currencyCode = "USD";
-  private $cancelUrl = "";
-  private $returnUrl = ""; // url user is redirected to after payment
+  private $cancelUrl = null;
+  private $returnUrl = null;
 
   // <editor-fold defaultstate="collapsed" desc="Accessors">
 
