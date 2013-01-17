@@ -1,6 +1,7 @@
 <?php
 
 /**
+ * Payment receiver object
  * @copyright 2012, Mikhail Yurasov
  */
 
@@ -37,5 +38,6 @@ class PaymentReceiver {
   public function setAmount($amount) {
     $this->amount = $amount;
   }
+
   // </editor-fold>
 }
