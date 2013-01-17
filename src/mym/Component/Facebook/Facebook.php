@@ -215,6 +215,4 @@ class Facebook
   {
     $this->fetchApiContents = $fetchApiContents;
   }
-
-
 }

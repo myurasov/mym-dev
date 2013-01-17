@@ -26,9 +26,6 @@ class Kernel
   // Root namespaces registered for autoloading
   private static $autoload = array();
 
-  //  Config
-  private static $conf = null;
-
   /**
    * Handle HTTP request
    */
