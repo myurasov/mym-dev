@@ -2,7 +2,7 @@
 
 /**
  * Adaptive Payments service
- * @copyright 2012, Mikhail Yurasov
+ * @copyright 2013, Mikhail Yurasov
  */
 
 namespace mym\Component\PayPal\AdaptivePayments;
@@ -63,31 +63,50 @@ class Service extends AbstractService {
   public function pay(PayOptions $options) {
 
     $data = array(
-      "actionType" => "PAY",
+
+      "clientDetails" => array(
+        "applicationId" => $this->configuration->getIsSandbox()
+          ? Configuration::SANDBOX_APP_ID : $this->configuration->getAppId(),
+        "ipAddress" => "127.0.0.1"
+      ),
+
+      "actionType" => $options->getActionType(),
       "currencyCode" => $options->getCurrencyCode(),
-      "requestEnvelope.detailLevel" => "ReturnAll",
-      "requestEnvelope.errorLanguage=en_US" => "en_US",
-      "clientDetails.applicationId" => $this->configuration->getIsSandbox()
-        ? Configuration::SANDBOX_APP_ID : $this->configuration->getAppId(),
+
+      "requestEnvelope" => array(
+        "detailLevel" => "ReturnAll",
+        "errorLanguage" => "en_US"
+      ),
+
       "cancelUrl" => $options->getCancelUrl(),
       "returnUrl" => $options->getReturnUrl(),
-      "senderEmail" => $options->getSenderEmail()
+      "feesPayer" => $options->getFeesPayer()
     );
+
+    if (!is_null($options->getSenderEmail())) {
+      $data["senderEmail"] = $options->getSenderEmail();
+    }
 
     // receiver list
 
     $receivers = $options->getReceivers();
 
-    for ($i = 0; $i < count($receivers); $i++) {
-      $data["receiverList.receiver($i).amount"] = $receivers[$i]->getAmount();
-      $data["receiverList.receiver($i).email"] = $receivers[$i]->getEmail();
+    $data["receiverList"] = array();
+    $data["receiverList"]["receiver"] = array();
 
-      if ($receivers[$i]->getIsPrimary()) {
-        $data["receiverList.receiver($i).isPrimary"] = "true";
-      }
+    for ($i = 0; $i < count($receivers); $i++) {
+      $data["receiverList"]["receiver"][] = array(
+        "amount" => round($receivers[$i]->getAmount(), 2),
+        "email" => $receivers[$i]->getEmail(),
+        "isPrimary" => $receivers[$i]->getIsPrimary()
+      );
     }
 
     return $this->callAPI("Pay", $data);
+  }
+
+  public function getPaymentOptions($payKey) {
+
   }
 
   // <editor-fold defaultstate="collapsed" desc="Accessors">
