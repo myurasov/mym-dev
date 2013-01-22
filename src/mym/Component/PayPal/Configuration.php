@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @copyright 2012, Mikhail Yurasov
+ * @copyright 2013, Mikhail Yurasov
  */
 
 namespace mym\Component\PayPal;
