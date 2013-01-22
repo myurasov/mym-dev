@@ -2,20 +2,49 @@
 
 /**
  * Options for "Pay" action
- * @copyright 2012, Mikhail Yurasov
+ *
+ * @see https://www.x.com/developers/paypal/documentation-tools/api/Pay-api-operation
+ * @copyright 2013, Mikhail Yurasov
  */
 
 namespace mym\Component\PayPal\AdaptivePayments;
 
 class PayOptions {
 
+  const FEESPAYER_SENDER = "SENDER";
+  const FEESPAYER_PRIMARYRECEIVER = "PRIMARYRECEIVER";
+  const FEESPAYER_EACHRECEIVER = "EACHRECEIVER";
+  const FEESPAYER_SECONDARYONLY = "SECONDARYONLY";
+
+  const ACTIONTYPE_PAY = "PAY";
+  const ACTIONTYPE_CREATE = "CREATE";
+  const ACTIONTYPE_PAY_PRIMARY = "PAY_PRIMARY";
+
   private $senderEmail = null;
   private $receivers = array();
   private $currencyCode = "USD";
   private $cancelUrl = null;
   private $returnUrl = null;
+  private $feesPayer = self::FEESPAYER_EACHRECEIVER;
+  private $actionType = self::ACTIONTYPE_PAY;
 
   // <editor-fold defaultstate="collapsed" desc="Accessors">
+
+  public function getActionType() {
+    return $this->actionType;
+  }
+
+  public function setActionType($actionType) {
+    $this->actionType = $actionType;
+  }
+
+  public function getFeesPayer() {
+    return $this->feesPayer;
+  }
+
+  public function setFeesPayer($feesPayer) {
+    $this->feesPayer = $feesPayer;
+  }
 
   public function getSenderEmail() {
     return $this->senderEmail;
