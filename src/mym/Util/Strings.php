@@ -347,6 +347,7 @@ class Strings
   const ALPHABET_HEXADEMICAL = '01234567890abcdef';
   const ALPHABET_ALPHANUMERICAL = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
   const ALPHABET_ALPHANUMERICAL_LOWCASE = '0123456789abcdefghijklmnopqrstuvwxyz';
+  const ALPHABET_DIGITS = '0123456789';
 
   /**
    * Get number representation in the specified radix
