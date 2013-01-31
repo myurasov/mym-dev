@@ -12,13 +12,13 @@ abstract class CLICommand
    */
   protected $cliApplication;
 
-  public function __construct(CLIApplication $cliApplication)
+  public function __construct()
   {
-    $this->cliApplication = $cliApplication;
-    $this->_setup();
+    $this->cliApplication = new CLIApplication();
+    $this->setup();
   }
 
-  protected function _setup()
+  protected function setup()
   {
     $this->cliApplication->options->set(array(
       'script_name'         => 'CLI Command ' . \get_called_class(),
@@ -36,12 +36,12 @@ abstract class CLICommand
     else
     {
       $this->cliApplication->onStart();
-      $this->_execute();
+      $this->execute();
       $this->cliApplication->onEnd();
     }
   }
 
-  abstract protected function _execute();
+  abstract protected function execute();
 
   /**
    * @return CLIApplication
