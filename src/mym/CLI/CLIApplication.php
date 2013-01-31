@@ -3,7 +3,7 @@
 /**
  * Command-line interface utility class
  *
- * @copyright 2010-2011 Misha Yurasov
+ * @copyright 2010-2013 Misha Yurasov
  * @package mym
  */
 
@@ -711,6 +711,15 @@ class CLIApplication
       $new_log_file = file_exists($this->options['log_file'])
         && (filesize($this->options['log_file']) > 0);
 
+      // create dir
+      $dir = dirname($this->options['log_file']);
+
+      if (!file_exists($dir)) {
+        if (!mkdir($dir, 0777, true)) {
+          trigger_error("Failed to create log directory '$dir'", E_USER_WARNING);
+        }
+      }
+
       if (!($this->message_log_fp = @fopen($this->options['log_file'], $this->logging_options[self::LOG_OVERWRITE] ? 'w' : 'a')))
       {
         trigger_error("Failed to open log file '{$this->options['log_file']}' for writing", E_USER_WARNING);
@@ -1044,8 +1053,10 @@ class CLIApplication
       . self::MESSAGE_INFORMATION . self::LOG_OVERWRITE;
 
     // Verbocity options
-    $this->default_options['verbocity_default'] = self::MESSAGE_STATUS . self::MESSAGE_ERROR
-      . self::VERB_PROGRESS;
+    $this->default_options['verbocity_default'] =
+      self::MESSAGE_STATUS
+      . self::MESSAGE_ERROR
+      . self::VERB_PROGRESS ;
 
     // Log file
     $this->default_options['log_file'] = \mym\PATH_LOGS . '/' . pathinfo($_SERVER['PHP_SELF'], PATHINFO_FILENAME) . '.log';
