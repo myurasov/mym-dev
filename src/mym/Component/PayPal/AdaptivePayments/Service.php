@@ -13,6 +13,9 @@ use mym\Component\PayPal\AdaptivePayments\PayOptions;
 
 class Service extends AbstractService {
 
+  const ENDPOINT_SANDBOX = "https://svcs.sandbox.paypal.com/AdaptivePayments/";
+  const ENDPOINT_PRODUCTION = "https://svcs.paypal.com/AdaptivePayments/";
+
   /**
    * Create payment
    * @param \mym\Component\Paypal\AdaptivePayments\PayOptions $options
@@ -63,29 +66,21 @@ class Service extends AbstractService {
   public function pay(PayOptions $options) {
 
     $data = array(
-
       "clientDetails" => array(
-        "applicationId" => $this->configuration->getIsSandbox()
-          ? Configuration::SANDBOX_APP_ID : $this->configuration->getAppId(),
+        "applicationId" => $this->configuration->getAppId(),
         "ipAddress" => "127.0.0.1"
       ),
-
       "actionType" => $options->getActionType(),
       "currencyCode" => $options->getCurrencyCode(),
-
-      "requestEnvelope" => array(
-        "detailLevel" => "ReturnAll",
-        "errorLanguage" => "en_US"
-      ),
-
       "cancelUrl" => $options->getCancelUrl(),
+      "feesPayer" => $options->getFeesPayer(),
+      "senderEmail" => $options->getSenderEmail(),
+      "ipnNotificationUrl" => $options->getIpnNotificationUrl(),
       "returnUrl" => $options->getReturnUrl(),
-      "feesPayer" => $options->getFeesPayer()
+      "cancelUrl" => $options->getCancelUrl(),
+      "memo" => $options->getMemo(),
+      "trackingId" => $options->getTrackingId()
     );
-
-    if (!is_null($options->getSenderEmail())) {
-      $data["senderEmail"] = $options->getSenderEmail();
-    }
 
     // receiver list
 
@@ -95,18 +90,37 @@ class Service extends AbstractService {
     $data["receiverList"]["receiver"] = array();
 
     for ($i = 0; $i < count($receivers); $i++) {
-      $data["receiverList"]["receiver"][] = array(
+
+      $data["receiverList"]["receiver"][$i] = array(
         "amount" => round($receivers[$i]->getAmount(), 2),
         "email" => $receivers[$i]->getEmail(),
-        "isPrimary" => $receivers[$i]->getIsPrimary()
+        "primary" => $receivers[$i]->getIsPrimary(),
+        "invoiceId" => $receivers[$i]->getInvoiceId(),
+        "paymentType" => $receivers[$i]->getPaymentType()
       );
+
+      // filter nulls
+      $data["receiverList"]["receiver"][$i] = array_filter(
+        $data["receiverList"]["receiver"][$i], function ($e) {
+          return !is_null($e);
+        });
     }
 
-    return $this->callAPI("Pay", $data);
+    $endpoint = ($this->configuration->getIsSandbox() ?
+      self::ENDPOINT_SANDBOX : self::ENDPOINT_PRODUCTION)
+      . "Pay";
+
+    return $this->callAPI($endpoint, $data);
   }
 
-  public function getPaymentOptions($payKey) {
+  public function paymentDetails($payKey) {
+    $data = array("payKey" => $payKey);
 
+    $endpoint = ($this->configuration->getIsSandbox() ?
+      self::ENDPOINT_SANDBOX : self::ENDPOINT_PRODUCTION)
+      . "PaymentDetails";
+
+    return $this->callAPI($endpoint, $data);
   }
 
   // <editor-fold defaultstate="collapsed" desc="Accessors">

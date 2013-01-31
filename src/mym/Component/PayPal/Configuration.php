@@ -9,8 +9,6 @@ namespace mym\Component\PayPal;
 class Configuration {
 
   const SANDBOX_APP_ID = "APP-80W284485P519543T";
-  const SANDBOX_ENDPOINT = "https://svcs.sandbox.paypal.com/";
-  const PRODUCTION_ENDPOINT = "https://svcs.paypal.com/";
 
   private $appId = "";
   private $userId = "";
@@ -19,14 +17,6 @@ class Configuration {
   private $isSandbox = false;
 
   // <editor-fold defaultstate="collapsed" desc="Accessors">
-
-  public function getIsSandbox() {
-    return $this->isSandbox;
-  }
-
-  public function setIsSandbox($isSandbox) {
-    $this->isSandbox = $isSandbox;
-  }
 
   public function getAppId() {
     return $this->appId;
@@ -60,5 +50,13 @@ class Configuration {
     $this->signature = $signature;
   }
 
+  public function getIsSandbox() {
+    return $this->isSandbox;
+  }
+
+  public function setIsSandbox($isSandbox) {
+    $this->isSandbox = $isSandbox;
+  }
+  
   // </editor-fold>
 }

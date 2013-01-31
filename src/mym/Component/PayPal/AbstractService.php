@@ -20,19 +20,19 @@ class AbstractService {
   /**
    * Call to Paypal API
    *
-   * @param string $action action name
-   * @param string/array $payload payload in JSON format / array
+   * @param string $endpoint
+   * @param array $payload
    * @return array Decoded response envelope as assoc array
    */
-  protected function callAPI($action = "", $payload) {
+  public function callAPI($endpoint, $payload) {
 
-    // endpoint url
-    $endpointUrl = $this->configuration->getIsSandbox()
-      ? Configuration::SANDBOX_ENDPOINT : Configuration::PRODUCTION_ENDPOINT;
-    $endpointUrl .= "AdaptivePayments/" . $action;
+    // debug
+    if ($this->debug) {
+      echo "# endpoint:\n", $endpoint, "\n";
+    }
 
     $ch = curl_init();
-    curl_setopt($ch, CURLOPT_URL, $endpointUrl);
+    curl_setopt($ch, CURLOPT_URL, $endpoint);
     curl_setopt($ch, CURLOPT_VERBOSE, $this->debug);
 
     curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
@@ -41,12 +41,23 @@ class AbstractService {
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
     curl_setopt($ch, CURLOPT_POST, 1);
 
-    if (is_array($payload)) {
-      $payload = json_encode($payload, $this->debug ? JSON_PRETTY_PRINT : 0);
-    }
+    $payload = array_merge_recursive(array(
+      "requestEnvelope" => array(
+        "detailLevel" => "ReturnAll",
+        "errorLanguage" => "en_US"
+      )
+    ), $payload);
 
+    // remove nulls from payload
+    $payload = array_filter($payload, function ($e) {
+      return !is_null($e);
+    });
+
+    $payload = json_encode($payload, $this->debug ? JSON_PRETTY_PRINT : 0);
+
+    // debug
     if ($this->debug) {
-      echo "\npayload:\n", $payload, "\n";
+      echo "\n# payload:\n", $payload, "\n\n";
     }
 
     curl_setopt($ch, CURLOPT_POSTFIELDS, $payload);
@@ -58,17 +69,17 @@ class AbstractService {
       "X-PAYPAL-SECURITY-USERID: " . $this->configuration->getUserId(),
       "X-PAYPAL-SECURITY-PASSWORD: " . $this->configuration->getPassword(),
       "X-PAYPAL-SECURITY-SIGNATURE: " . $this->configuration->getSignature(),
-      "X-PAYPAL-SERVICE-VERSION: 1.3.0",
-      "X-PAYPAL-APPLICATION-ID: " . ($this->configuration->getIsSandbox()
-        ? Configuration::SANDBOX_APP_ID : $this->configuration->getAppId())
+//      "X-PAYPAL-SERVICE-VERSION: 1.3.0",
+      "X-PAYPAL-APPLICATION-ID: " . $this->configuration->getAppId()
     ));
 
     // make call
 
     $res = curl_exec($ch);
 
+    // debug
     if ($this->debug) {
-      echo "\nresponse:\n", $res, "\n";
+      echo "\n# response:\n", $res, "\n\n";
     }
 
     $res = json_decode($res, true);

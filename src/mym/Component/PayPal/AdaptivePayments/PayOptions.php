@@ -27,8 +27,44 @@ class PayOptions {
   private $returnUrl = null;
   private $feesPayer = self::FEESPAYER_EACHRECEIVER;
   private $actionType = self::ACTIONTYPE_PAY;
+  private $ipnNotificationUrl = null;
+  private $memo = null;
+  private $reverseAllParallelPaymentsOnError = false;
+  private $trackingId = null;
 
   // <editor-fold defaultstate="collapsed" desc="Accessors">
+
+  public function getMemo() {
+    return $this->memo;
+  }
+
+  public function setMemo($memo) {
+    $this->memo = $memo;
+  }
+
+  public function getReverseAllParallelPaymentsOnError() {
+    return $this->reverseAllParallelPaymentsOnError;
+  }
+
+  public function setReverseAllParallelPaymentsOnError($reverseAllParallelPaymentsOnError) {
+    $this->reverseAllParallelPaymentsOnError = $reverseAllParallelPaymentsOnError;
+  }
+
+  public function getTrackingId() {
+    return $this->trackingId;
+  }
+
+  public function setTrackingId($trackingId) {
+    $this->trackingId = $trackingId;
+  }
+
+  public function getIpnNotificationUrl() {
+    return $this->ipnNotificationUrl;
+  }
+
+  public function setIpnNotificationUrl($ipnNotificationUrl) {
+    $this->ipnNotificationUrl = $ipnNotificationUrl;
+  }
 
   public function getActionType() {
     return $this->actionType;
