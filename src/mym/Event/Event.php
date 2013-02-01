@@ -1,6 +1,7 @@
 <?php
 
 /**
+ * Event object
  * @copyright 2013, Mikhail Yurasov
  */
 
@@ -8,7 +9,7 @@ namespace mym\Event;
 
 class Event {
 
-  protected $name = "event";
+  protected $name = null;
   protected $source = null;
   protected $stopPropagation = false;
 
@@ -35,5 +36,4 @@ class Event {
   public function setStopPropagation($stopPropagation) {
     $this->stopPropagation = $stopPropagation;
   }
-
 }

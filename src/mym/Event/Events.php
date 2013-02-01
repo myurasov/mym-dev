@@ -31,6 +31,10 @@ trait Events {
   public function fireEvent(Event $event) {
     $name = $event->getName();
 
+    if (empty($name)) {
+      throw new \Exception("Event name cannot be empty");
+    }
+
     if (isset($this->listeners[$name])) {
       $event->setSource($this);
 
