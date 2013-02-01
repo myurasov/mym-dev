@@ -1,6 +1,7 @@
 <?php
 
 /**
+ * Events trait
  * @copyright 2013, Mikhail Yurasov
  */
 
