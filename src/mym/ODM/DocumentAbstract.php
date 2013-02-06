@@ -9,6 +9,9 @@
 namespace mym\ODM;
 
 use Doctrine\ODM\MongoDB\DocumentManager;
+use Symfony\Component\Validator\Validation;
+use Doctrine\ODM\MongoDB\Mapping\Annotations as ODM;
+use Symfony\Component\Validator\Exception\ValidatorException;
 
 abstract class DocumentAbstract
 {
@@ -74,7 +77,7 @@ abstract class DocumentAbstract
    * @param bool $require
    * @throws \Exception
    */
-  public static function _load(DocumentManager $dm, $id = '', $require = false)
+  public static function loadUsingDocumentManager(DocumentManager $dm, $id = '', $require = false)
   {
     $documentName = get_called_class();
     $document = null;
@@ -89,4 +92,25 @@ abstract class DocumentAbstract
 
     return $document;
   }
+
+  /**
+   * @ODM\PrePersist
+   * @ODM\PreFlush
+   */
+  public function validate() {
+
+    $validator = Validation::createValidatorBuilder()
+      ->enableAnnotationMapping()
+      ->getValidator();
+
+    $violations = $validator->validate($this);
+
+    if (count($violations) > 0) {
+      throw new ValidatorException();
+    }
+
+    return true;
+  }
+
+  abstract public static function load($id = "", $require = false);
 }
