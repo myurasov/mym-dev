@@ -94,7 +94,6 @@ abstract class DocumentAbstract
   }
 
   /**
-   * @ODM\PrePersist
    * @ODM\PreFlush
    */
   public function validate() {
@@ -103,10 +102,16 @@ abstract class DocumentAbstract
       ->enableAnnotationMapping()
       ->getValidator();
 
-    $violations = $validator->validate($this);
+    $violations /* @var $violations \Symfony\Component\Validator\ConstraintViolationList */ = $validator->validate($this);
+    $message = [];
 
     if (count($violations) > 0) {
-      throw new ValidatorException();
+
+      foreach ($violations as $violation /* @var $violation \Symfony\Component\Validator\ConstraintViolation */) {
+        $message[] = $violation->getPropertyPath() . ": " . $violation->getMessage();
+      }
+
+      throw new ValidatorException("Validation failed. " . join(" ", $message));
     }
 
     return true;
