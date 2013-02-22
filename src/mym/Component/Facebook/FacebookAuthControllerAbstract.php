@@ -12,6 +12,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Cookie;
+use Symfony\Component\HttpFoundation\Session\Session;
 use mym\Component\Facebook\Facebook;
 
 abstract class FacebookAuthControllerAbstract {
@@ -28,14 +29,13 @@ abstract class FacebookAuthControllerAbstract {
 
   private $returnUrl; // return url
 
+  /**
+   * @var Session
+   */
+  private $session;
+
   public function loginAction(Request $request) {
     $response = new Response();
-
-    // start session
-    if (session_id() == '') {
-      session_start();
-    }
-
     $response->setPrivate();
 
     // url to return to
@@ -55,10 +55,11 @@ abstract class FacebookAuthControllerAbstract {
     ));
 
     // save state (CSRF token)
-    $_SESSION['facebookState'] = $fb->getState();
+    $sesion = new Session();
+    $sesion->set("facebookState", $fb->getState());
 
     // redirect to login page
-    $response->headers->set('Location', $url);
+    $response->headers->set("Location", $url);
 
     return $response;
   }
@@ -72,10 +73,9 @@ abstract class FacebookAuthControllerAbstract {
 
     $response = new RedirectResponse($this->returnUrl);
 
-    // delete session
-    session_start();
-    session_destroy();
-    $response->headers->setCookie(new Cookie(session_name(), null));
+    // clear session
+    $sesion = new Session();
+    $sesion->clear();
 
     return $response;
   }
@@ -86,20 +86,16 @@ abstract class FacebookAuthControllerAbstract {
     $this->returnUrl = $request->query->get('returnUrl');
 
     if (!$request->query->has('error')) {
+
       // start session
-      if (session_id() == '') {
-        session_start();
-      }
+      $session = new Session();
 
       // check csrf token
-      if (!isset($_SESSION['facebookState']) ||
-        $_SESSION['facebookState'] != $request->query->get('state'))
+      if (!$session->has("facebookState") || $session->get("facebookState") != $request->query->get("state")) {
         throw new \Exception("States don't match");
+      }
 
-      unset($_SESSION['facebookState']);
-
-      // end session
-      session_destroy();
+      $session->remove("facebookState");
 
       // get acces token
 
@@ -110,6 +106,7 @@ abstract class FacebookAuthControllerAbstract {
         $this->getCallbackUrl()
       );
 
+      $this->setSession($session);
       $this->onAuthenticate($facebookAccessToken);
     }
     else {
@@ -138,6 +135,14 @@ abstract class FacebookAuthControllerAbstract {
   public abstract function onAuthenticate($accessToken);
 
   // <editor-fold defaultstate="collapsed" desc="Accessors">
+
+  public function getSession() {
+    return $this->session;
+  }
+
+  public function setSession($session) {
+    $this->session = $session;
+  }
 
   public function getFacebookConfig() {
     return $this->facebookConfig;
