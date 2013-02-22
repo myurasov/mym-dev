@@ -7,6 +7,8 @@
 
 namespace mym\Event;
 
+use mym\Singleton;
+
 class EventDispatcher {
-  use EventsStatic;
+  use Singleton, Events;
 }
