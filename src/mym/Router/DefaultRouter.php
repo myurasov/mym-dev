@@ -27,14 +27,25 @@ class DefaultRouter implements RouterInterface {
     return false;
   }
 
+  /**
+   * Resolves controller class and action names to fully-qualified ones
+   * @throws HttpNotFoundException
+   */
   protected function resolve() {
-    $this->controller = str_replace("/", "\\", $this->controller);
-    $this->controller = \mym\Config::get("http.controllerNamespace") . "\\" . $this->controller . 'Controller';
+
+    if (substr($this->controller, 0, 1) != "\\" /* if path is not absolute */) {
+      // resolve to class name
+      $this->controller = str_replace("/", "\\", $this->controller);
+      $this->controller = \mym\Config::get("http.controllerNamespace") .
+        "\\" . $this->controller . 'Controller';
+    }
+
     $this->action = $this->action . 'Action';
 
     if (!class_exists($this->controller) || !in_array($this->action, get_class_methods($this->controller))) {
       throw new HttpNotFoundException("Action \"{$this->controller}::{$this->action}\" not found");
     }
+
   }
 
   public function route(Request & $request) {
