@@ -1,26 +1,18 @@
 <?php
 
 /**
- * mym Framework main file
- *
- * @copyright Misha Yurasov 2009-2011
- * @package mym
+ * mym framework
+ * @copyright 2009-2013, Mikhail Yurasov <me@yurasov.me>
  */
 
 namespace mym;
 
-use mym\Exception\Exception;
-
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
-
+use mym\Exception\Exception;
 use mym\Exception\HTTPException;
 
-/**
- * mym Kernel class
- *
- */
 class Kernel
 {
   // Root namespaces registered for autoloading
@@ -29,7 +21,7 @@ class Kernel
   /**
    * Handle HTTP request
    */
-  public static function handleHttpRequest($catchExceptions = true)
+  public static function handleHttpRequest()
   {
     $request;
     $response;
@@ -40,7 +32,7 @@ class Kernel
 
       // Route
 
-      $httpRouter = Config::$options['httpRouter'];
+      $httpRouter = Config::$options["http"]["router"];
       $httpRouter = new $httpRouter;
 
       $httpRouter->route($request);
@@ -56,7 +48,7 @@ class Kernel
         throw new Exception("Response object should be returned");
     };
 
-    if ($catchExceptions)
+    if (Config::$options["http"]["catchExceptions"])
     {
       try
       {
@@ -98,73 +90,83 @@ class Kernel
    * Initialize mym
    *
    */
-  public static function selfInit()
+  public static function init()
   {
     // Define version
 
     // major.minor<.change>< status>
-    define('mym\VERSION', '0.10-dev');
+    define('mym\VERSION', '1.1-dev');
 
-    if (!defined('mym\HOSTNAME'))
+    if (!defined('mym\HOSTNAME')) {
       define('mym\HOSTNAME', 'localhost');
+    }
 
-    if (!defined('mym\DEVELOPMENT'))
+    if (!defined('mym\DEVELOPMENT')) {
       define('mym\DEVELOPMENT', false);
-
-    // relocate mym config?
-    if (!defined('mym\RELOC_CONFIG'))
-      define ('mym\RELOC_CONFIG', true);
+    }
 
     // Define paths:
 
     // Project root directory
 
-    if (!defined('mym\PATH_ROOT'))
+    if (!defined('mym\PATH_ROOT')) {
       define('mym\PATH_ROOT', realpath(__DIR__ . '/../../..'));
+    }
 
     // Core executable files
-    if (!defined('mym\PATH_SRC'))
+    if (!defined('mym\PATH_SRC')) {
       define('mym\PATH_SRC', PATH_ROOT . '/src');
+    }
 
     // Web documents
-    if (!defined('mym\PATH_WWW'))
+    if (!defined('mym\PATH_WWW')) {
       define('mym\PATH_WWW', PATH_SRC . '/www');
+    }
 
     // Command-line interface
-    if (!defined('mym\PATH_CLI'))
+    if (!defined('mym\PATH_CLI')) {
       define('mym\PATH_CLI', PATH_SRC . '/cli');
+    }
 
     // Variable application data
-    if (!defined('mym\PATH_DATA'))
+    if (!defined('mym\PATH_DATA')) {
       define('mym\PATH_DATA', PATH_ROOT . '/data');
+    }
 
     // Temporary data
-    if (!defined('mym\PATH_TEMP'))
+    if (!defined('mym\PATH_TEMP')) {
       define('mym\PATH_TEMP', PATH_DATA . '/temp');
+    }
 
     // Code modules and root namespace
-    if (!defined('mym\PATH_MODULES'))
+    if (!defined('mym\PATH_MODULES')) {
       define('mym\PATH_MODULES', PATH_SRC . '/modules');
+    }
 
     // Templates
-    if (!defined('mym\PATH_TEMPLATES'))
+    if (!defined('mym\PATH_TEMPLATES')) {
       define('mym\PATH_TEMPLATES', PATH_SRC . '/templates');
+    }
 
     // Resource files
-    if (!defined('mym\PATH_RESOURCES'))
+    if (!defined('mym\PATH_RESOURCES')) {
       define('mym\PATH_RESOURCES', PATH_SRC . '/resources');
+    }
 
     // Bundled libraries
-    if (!defined('mym\PATH_LIBRARIES'))
+    if (!defined('mym\PATH_LIBRARIES')) {
       define('mym\PATH_LIBRARIES', PATH_SRC . '/libraries');
+    }
 
     // Config classes
-    if (!defined('mym\PATH_CONFIGURATION'))
+    if (!defined('mym\PATH_CONFIGURATION')) {
       define('mym\PATH_CONFIGURATION', PATH_SRC . '/configs');
+    }
 
     // Logs
-    if (!defined('mym\PATH_LOGS'))
+    if (!defined('mym\PATH_LOGS')) {
       define('mym\PATH_LOGS', PATH_DATA . '/logs');
+    }
 
     // Define errors:
 
@@ -173,9 +175,6 @@ class Kernel
 
     // Register autoloader function
     spl_autoload_register(__CLASS__ . '::autoload');
-
-    // Register mym autoloading
-    self::registerAutoloadNamespace('mym', __DIR__, RELOC_CONFIG);
   }
 
   /**
@@ -260,4 +259,4 @@ class Kernel
   }
 }
 
-Kernel::selfInit();
+Kernel::init();
