@@ -2,10 +2,7 @@
 
 /**
  * Configuration base class
- * Should be inherited only by static classes
- *
- * @copyright 2010 Misha Yurasov
- * @package mym
+ * @copyright 2013, Mikhail Yurasov <me@yurasov.me>
  */
 
 namespace mym;
@@ -15,7 +12,7 @@ use mym\Exception\InternalException;
 
 abstract class ConfigAbstract
 {
-  protected static $options = array();
+  public static $options = [];
 
   /**
    * Get option / all options
