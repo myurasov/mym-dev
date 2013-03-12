@@ -8,6 +8,7 @@ namespace mym\Router;
 
 use mym\Router\RouterInterface;
 use Symfony\Component\HttpFoundation\Request;
+use mym\Exception\HttpNotFoundException;
 
 class DefaultRouter implements RouterInterface {
 
@@ -18,7 +19,7 @@ class DefaultRouter implements RouterInterface {
 
     $m = [];
 
-    if (preg_match('#^/([a-z0-9/]+?)(?:/([a-z0-9]+))?$#i', $request->getPathInfo(), $m)) {
+    if (preg_match('#^/([a-z0-9/]+?)(?:/([a-z0-9]+))?/?$#i', $request->getPathInfo(), $m)) {
       $this->controller = $m[1];
       $this->action = count($m) > 2 ? $m[2] : "index";
       return true;
