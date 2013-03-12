@@ -23,6 +23,8 @@ class Facebook
   private $apiContentType; // last content type returned by api call
   private $apiUrl; // last url used for api call
 
+  private $returnArray = false; // data format (obj/array)
+
   /**
    * Constructor
    * @param array $params [appId, secret, certFile]
@@ -151,13 +153,17 @@ class Facebook
     $this->apiUrl = curl_getinfo($ch, CURLINFO_EFFECTIVE_URL);
     curl_close($ch);
 
-    if (false !== strpos($this->apiContentType, "text/javascript"))
-      $data = json_decode($data);
+    if (false !== strpos($this->apiContentType, "text/javascript")) {
+      $data = json_decode($data, $this->returnArray);
+    }
 
     if ($httpCode == 400)
+    {
       throw new OAuthException(
-        $data->error->message,
-        $data->error->code);
+        is_array($data) ? $data["error"]["message"] : $data->error->message,
+        is_array($data) ? $data["error"]["code"] : $data->error->code
+      );
+    }
     else if ($httpCode > 400)
     {
       throw new \Exception("Call to Graph API failed");
@@ -214,5 +220,13 @@ class Facebook
   public function setFetchApiContents($fetchApiContents)
   {
     $this->fetchApiContents = $fetchApiContents;
+  }
+
+  public function getReturnArray() {
+    return $this->returnArray;
+  }
+
+  public function setReturnArray($returnArray) {
+    $this->returnArray = $returnArray;
   }
 }
