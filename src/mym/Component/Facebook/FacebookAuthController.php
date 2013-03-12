@@ -25,8 +25,17 @@ trait FacebookAuthController {
   );
 
   private $facebookScope = ''; // access scope
-
   private $facebookAccessToken = '';
+
+  /**
+   * @var Response
+   */
+  private $response;
+
+  /**
+   * @var Request
+   */
+  private $request;
 
   /**
    * @var Session
@@ -63,8 +72,13 @@ trait FacebookAuthController {
   // ?returnUrl=<string>
   public function facebookCallbackAction(Request $request) {
 
+    $this->request = $request;
+
     // url to return to
     $returnUrl = $request->query->get('returnUrl');
+
+    // create response
+    $this->response = new RedirectResponse($returnUrl);
 
     if (!$request->query->has('error')) {
 
@@ -89,14 +103,15 @@ trait FacebookAuthController {
 
       $this->setSession($session);
       $this->setFacebookAccessToken($facebookAccessToken);
-      $this->onAuthenticateWithFacebook($facebookAccessToken);
+
+      $this->onAuthenticateWithFacebook();
     }
     else {
       // user pressed cancel
     }
 
     // redirect back
-    return new RedirectResponse($returnUrl);
+    return $this->response;
   }
 
   private function getRedirectUrl($returnUrl = "") {
@@ -148,6 +163,22 @@ trait FacebookAuthController {
 
   public function setSession($session) {
     $this->session = $session;
+  }
+
+  public function getResponse() {
+    return $this->response;
+  }
+
+  public function setResponse($response) {
+    $this->response = $response;
+  }
+
+  public function getRequest() {
+    return $this->request;
+  }
+
+  public function setRequest($request) {
+    $this->request = $request;
   }
 
   // </editor-fold>
