@@ -153,7 +153,7 @@ class Facebook
     $this->apiUrl = curl_getinfo($ch, CURLINFO_EFFECTIVE_URL);
     curl_close($ch);
 
-    if (false !== strpos($this->apiContentType, "text/javascript")) {
+    if (preg_match("/json|javascript/i", $this->apiContentType)) {
       $data = json_decode($data, $this->returnArray);
     }
 
