@@ -1059,10 +1059,10 @@ class CLIApplication
       . self::VERB_PROGRESS ;
 
     // Log file
-    $this->default_options['log_file'] = \mym\PATH_LOGS . '/' . pathinfo($_SERVER['PHP_SELF'], PATHINFO_FILENAME) . '.log';
+    $this->default_options['log_file'] = pathinfo($_SERVER['PHP_SELF'], PATHINFO_FILENAME) . '.log';
 
     // Progress file
-    $this->default_options['progress_file'] = \mym\PATH_LOGS . '/' . pathinfo($_SERVER['PHP_SELF'], PATHINFO_FILENAME) . '.progress';
+    $this->default_options['progress_file'] = pathinfo($_SERVER['PHP_SELF'], PATHINFO_FILENAME) . '.progress';
 
     // Progress file format
     $this->default_options['progress_log_format'] = "%title%\n\n%item%/%total% [%bar%] %percent%\n\n" .
