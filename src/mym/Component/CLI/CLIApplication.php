@@ -3,16 +3,17 @@
 /**
  * Command-line interface utility class
  *
+ * @version 1.0
  * @copyright 2010-2013 Misha Yurasov
  * @package mym
  */
 
-namespace mym\CLI;
+namespace mym\Component\CLI;
 
 use mym\Storage;
-use mym\Exception\Exception;
 use mym\Util\Strings;
 use mym\Util\Text;
+use \Exception;
 
 class CLIApplication
 {
@@ -171,7 +172,7 @@ class CLIApplication
     }
     else
     {
-      throw new Exception("Parameter '$name' is not declared or read", \mym\ERROR_MISC);
+      throw new Exception("Parameter '$name' is not declared or read");
     }
   }
 
@@ -267,7 +268,7 @@ class CLIApplication
         break;
 
       default:
-        throw new Exception("Property '" . __CLASS__ . "::$name' doesn't exist", \mym\ERROR_MISC);
+        throw new Exception("Property '" . __CLASS__ . "::$name' doesn't exist");
         break;
     }
   }
@@ -283,7 +284,7 @@ class CLIApplication
     switch ($name)
     {
       default:
-        throw new Exception("Property '" . __CLASS__ . "::$name' doesn't exist", \mym\ERROR_MISC);
+        throw new Exception("Property '" . __CLASS__ . "::$name' doesn't exist");
         break;
     }
   }
@@ -447,7 +448,7 @@ class CLIApplication
 
           default:
           {
-            throw new Exception('Wrong parameter type for "' . $declared_parameter_name . '"', \mym\ERROR_MISC);
+            throw new Exception('Wrong parameter type for "' . $declared_parameter_name . '"');
             break;
           }
         }
@@ -1143,7 +1144,7 @@ class CLIApplication
     }
     else
     {
-      throw new Exception('Wrong parameter type for "' . $declared_parameter_name . '"', \mym\ERROR_MISC);
+      throw new Exception('Wrong parameter type for "' . $declared_parameter_name . '"');
     }
   }
 
@@ -1182,7 +1183,7 @@ class CLIApplication
     {
       if (is_null($declared_parameter['default']))
       {
-        throw new Exception('Unknown parameter type for "' . $declared_parameter_name . '"', \mym\ERROR_MISC);
+        throw new Exception('Unknown parameter type for "' . $declared_parameter_name . '"');
       }
       else
       {
