@@ -108,6 +108,7 @@ trait FacebookAuthController {
     }
     else {
       // user pressed cancel
+      $this->onAuthenticateWithFacebookError();
     }
 
     // redirect back
@@ -121,7 +122,12 @@ trait FacebookAuthController {
   /**
    * Called when user succesfully authenticated by Facebook
    */
-  abstract public function onAuthenticateWithFacebook();
+  public function onAuthenticateWithFacebook(){}
+
+  /**
+   * Called when user presses cancel
+   */
+  public function onAuthenticateWithFacebookError(){}
 
   // <editor-fold defaultstate="collapsed" desc="Accessors">
 
