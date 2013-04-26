@@ -25,6 +25,8 @@ class Facebook
 
   private $returnArray = false; // data format (obj/array)
 
+  private $debug = false;
+
   /**
    * Constructor
    * @param array $params [appId, secret, certFile]
@@ -51,7 +53,8 @@ class Facebook
       CURLOPT_RETURNTRANSFER  => true,
       CURLOPT_TIMEOUT         => 60,
       CURLOPT_SSLVERSION      => 3,
-      CURLOPT_FOLLOWLOCATION  => true
+      CURLOPT_FOLLOWLOCATION  => true,
+      CURLOPT_VERBOSE         => $this->debug
     );
 
     curl_setopt_array($ch, $curlOptions);
@@ -132,20 +135,29 @@ class Facebook
   /**
    * Make call to GraphAPI
    *
-   * @param string $id
-   * @param string|null $connection
+   * @param string $path
    */
-  public function graphApi($id, $connection = null)
+  public function graphApi($path, $method = "GET", $data = [])
   {
     // get graph api url
-    $url = 'https://graph.facebook.com/' .
-      $id . ($connection !== null ? '/' . $connection : '');
-    $url .= '?access_token=' . $this->accessToken;
+    $url = 'https://graph.facebook.com/' . $path;
 
     $ch = $this->_getCurl($url);
 
-    if (!$this->fetchApiContents)
+    $data["access_token"] = $this->accessToken;
+    $query = http_build_query($data, null, "&");
+
+    if ($method == "GET") {
+      $url .= '?' . $query;
+      curl_setopt($ch, CURLOPT_URL, $url);
+    } else if ($method == "POST") {
+      curl_setopt($ch, CURLOPT_POST, true);
+      curl_setopt($ch, CURLOPT_POSTFIELDS, $query);
+    }
+
+    if (!$this->fetchApiContents) {
       curl_setopt ($ch, CURLOPT_NOBODY, true);
+    }
 
     $data = curl_exec($ch);
     $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
@@ -228,5 +240,13 @@ class Facebook
 
   public function setReturnArray($returnArray) {
     $this->returnArray = $returnArray;
+  }
+
+  public function getDebug() {
+    return $this->debug;
+  }
+
+  public function setDebug($debug) {
+    $this->debug = $debug;
   }
 }
