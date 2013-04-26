@@ -19,6 +19,7 @@ class RESTResponse extends Response
 
   public function __construct($data = null, $format = "json") {
     parent::__construct();
+    $this->data = $data;
     $this->setFormat($format);
   }
 
@@ -29,25 +30,35 @@ class RESTResponse extends Response
   {
     if (!$this->serializer) {
 
-      $sv =  new \JMS\Serializer\JsonSerializationVisitor(
-        new \JMS\Serializer\Naming\IdenticalPropertyNamingStrategy()
-      );
-
-      $sv->setOptions(JSON_PRETTY_PRINT);
-
       $sb /* @var $sb \JMS\Serializer\SerializerBuilder  */ =
         \JMS\Serializer\SerializerBuilder::create();
 
-      $sb->setSerializationVisitor("json", $sv);
+      // set format
+      if ($this->format == "json") {
 
+        $sv =  new \JMS\Serializer\JsonSerializationVisitor(
+          new \JMS\Serializer\Naming\IdenticalPropertyNamingStrategy()
+        );
+
+        $sv->setOptions(JSON_PRETTY_PRINT);
+        $sb->setSerializationVisitor("json", $sv);
+
+      } else if ($this->format == "xml") {
+
+        $sb->setSerializationVisitor("xml", new \JMS\Serializer\XmlSerializationVisitor(
+          new \JMS\Serializer\Naming\IdenticalPropertyNamingStrategy()
+        ));
+      }
+
+      // chache dir
       if ($this->cacheDir) {
         $sb->setCacheDir($this->cacheDir);
       }
 
+      // debugging
       $sb->setDebug($this->debug);
 
       $this->serializer = $sb->build();
-
     }
 
     return $this->serializer;
