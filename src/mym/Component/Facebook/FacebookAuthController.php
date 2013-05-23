@@ -104,6 +104,8 @@ trait FacebookAuthController {
       $this->setSession($session);
       $this->setFacebookAccessToken($facebookAccessToken);
 
+      //
+
       $this->onAuthenticateWithFacebook();
     }
     else {
