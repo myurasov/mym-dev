@@ -14,7 +14,7 @@ trait AuthenticateTrait
    * @param Request $request
    * @param bool $required
    * @throws HttpForbiddenException
-   * @return User Current user
+   * @return Current user
    */
   public static function authenticate(Request $request, $required = false)
   {
@@ -24,6 +24,7 @@ trait AuthenticateTrait
     $session = new Session();
     $session->start();
     $request->setSession($session);
+
 
     if ($session->has("userId")) {
       $user = self::load($session->get("userId"));
