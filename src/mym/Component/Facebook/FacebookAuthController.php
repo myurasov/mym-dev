@@ -165,6 +165,9 @@ trait FacebookAuthController {
     $this->facebookAccessToken = $facebookAccessToken;
   }
 
+  /**
+   * @return Session
+   */
   public function getSession() {
     return $this->session;
   }
