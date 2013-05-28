@@ -119,10 +119,12 @@ class Facebook
     $data = curl_exec($ch);
     $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
     $this->apiUrl = curl_getinfo($ch, CURLINFO_EFFECTIVE_URL);
+    $error = curl_error($ch);
     curl_close($ch);
 
-    if ($httpCode != 200)
-      throw new \Exception('Failed to get access token');
+    if ($httpCode != 200) {
+      throw new \Exception('Failed to get access token: ' .  $error);
+    }
 
     $parts = array();
     parse_str($data, $parts);
