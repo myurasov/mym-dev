@@ -15,9 +15,6 @@ use mym\Exception\HTTPException;
 
 class Kernel
 {
-  // Root namespaces registered for autoloading
-  private static $autoload = array();
-
   /**
    * Handle HTTP request
    */
@@ -41,7 +38,8 @@ class Kernel
 
       // Call controller
 
-      $controller = new $controller;
+      $controller = new $controller($request);
+
       $response = $controller->$action($request);
 
       if (!($response instanceof Response))
