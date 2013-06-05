@@ -22,9 +22,13 @@ trait AuthenticateTrait
 
     // start session
     $session = new Session();
-    $session->start();
-    $request->setSession($session);
 
+    try {
+      $session->start();
+    }
+    catch (\RuntimeException $e) {}
+
+    $request->setSession($session);
 
     if ($session->has("userId")) {
       $user = self::load($session->get("userId"));
