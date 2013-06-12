@@ -33,9 +33,12 @@ class SerializerService
     // set format
     if ($this->format == "json") {
 
-      $sv = new \JMS\Serializer\JsonSerializationVisitor(
-        new \JMS\Serializer\Naming\IdenticalPropertyNamingStrategy()
-      );
+        $sv =  new \JMS\Serializer\JsonSerializationVisitor(
+          /* save original name or annotated one  */
+          new \JMS\Serializer\Naming\SerializedNameAnnotationStrategy(
+            new \JMS\Serializer\Naming\IdenticalPropertyNamingStrategy()
+          )
+        );
 
       $sv->setOptions($this->jsonOptions);
       $sb->setSerializationVisitor("json", $sv);
@@ -43,7 +46,10 @@ class SerializerService
     else if ($this->format == "xml") {
 
       $sb->setSerializationVisitor("xml", new \JMS\Serializer\XmlSerializationVisitor(
-        new \JMS\Serializer\Naming\IdenticalPropertyNamingStrategy()
+        /* save original name or annotated one  */
+        new \JMS\Serializer\Naming\SerializedNameAnnotationStrategy(
+          new \JMS\Serializer\Naming\IdenticalPropertyNamingStrategy()
+        )
       ));
     }
 
