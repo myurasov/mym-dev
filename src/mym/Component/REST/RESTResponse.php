@@ -7,6 +7,7 @@
 namespace mym\Component\REST;
 
 use \Symfony\Component\HttpFoundation\Response;
+use \mym\Component\SerializerService;
 
 class RESTResponse extends Response
 {
@@ -30,35 +31,11 @@ class RESTResponse extends Response
   {
     if (!$this->serializer) {
 
-      $sb /* @var $sb \JMS\Serializer\SerializerBuilder  */ =
-        \JMS\Serializer\SerializerBuilder::create();
-
-      // set format
-      if ($this->format == "json") {
-
-        $sv =  new \JMS\Serializer\JsonSerializationVisitor(
-          new \JMS\Serializer\Naming\IdenticalPropertyNamingStrategy()
-        );
-
-        $sv->setOptions(JSON_PRETTY_PRINT);
-        $sb->setSerializationVisitor("json", $sv);
-
-      } else if ($this->format == "xml") {
-
-        $sb->setSerializationVisitor("xml", new \JMS\Serializer\XmlSerializationVisitor(
-          new \JMS\Serializer\Naming\IdenticalPropertyNamingStrategy()
-        ));
-      }
-
-      // chache dir
-      if ($this->cacheDir) {
-        $sb->setCacheDir($this->cacheDir);
-      }
-
-      // debugging
-      $sb->setDebug($this->debug);
-
-      $this->serializer = $sb->build();
+      $serializerService = new SerializerService();
+      $serializerService->setFormat($this->format);
+      $serializerService->setCacheDir($this->cacheDir);
+      $serializerService->setDebug($this->debug);
+      $this->serializer = $serializerService->getSerializer();
     }
 
     return $this->serializer;
@@ -78,7 +55,8 @@ class RESTResponse extends Response
 
   public function setData($data) {
     $this->data = $data;
-    $this->setContent($this->getSerializer()->serialize($this->data, $this->format));
+    $this->setContent($this->getSerializer()
+      ->serialize($this->data, $this->format));
   }
 
   public function getFormat() {
