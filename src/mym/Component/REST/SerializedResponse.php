@@ -9,7 +9,7 @@ namespace mym\Component\REST;
 use \Symfony\Component\HttpFoundation\Response;
 use \mym\Component\SerializerService;
 
-class RESTResponse extends Response
+class SerializedResponse extends Response
 {
   private $format;
   private $data;
@@ -17,6 +17,7 @@ class RESTResponse extends Response
 
   private $cacheDir;
   private $debug = false;
+  private $jsonOptions = null;
 
   public function __construct($data = null, $format = "json") {
     parent::__construct();
@@ -35,10 +36,21 @@ class RESTResponse extends Response
       $serializerService->setFormat($this->format);
       $serializerService->setCacheDir($this->cacheDir);
       $serializerService->setDebug($this->debug);
+      $serializerService->setJsonOptions($this->jsonOptions);
       $this->serializer = $serializerService->getSerializer();
     }
 
     return $this->serializer;
+  }
+
+  public function getJsonOptions()
+  {
+    return $this->jsonOptions;
+  }
+
+  public function setJsonOptions($jsonOptions)
+  {
+    $this->jsonOptions = $jsonOptions;
   }
 
   public function setFormat($format) {

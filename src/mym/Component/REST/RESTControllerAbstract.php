@@ -5,7 +5,7 @@ namespace mym\Component\REST;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-class ControllerAbstract
+class RESTControllerAbstract
 {
   public function dispatchAction(Request $request) {
     switch ($request->getMethod()) {
