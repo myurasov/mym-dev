@@ -18,8 +18,7 @@ class SerializerService
   private $format = 'json';
   private $cacheDir;
   private $debug = false;
-  private $jsonOptions = JSON_PRETTY_PRINT;
-
+  private $jsonOptions = null;
 
   public function __construct()
   {
