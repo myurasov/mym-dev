@@ -34,6 +34,7 @@ class CLIApplication
   const MESSAGE_ERROR       = 'e';  // Error messages
   const MESSAGE_STATUS      = 's';  // Startup and finish messages
   const MESSAGE_INFORMATION = 'i';  // Process information messages
+  const MESSAGE_DEBUG       = 'd';  // Process debug messages
 
   // Verbocity-specific flags
 
@@ -236,11 +237,11 @@ class CLIApplication
     $this->declareParameter('help', '?', false, self::PARAM_TYPE_BOOLEAN, 'Display help');
 
     $this->declareParameter('logging', 'l', $this->options['logging_default'],
-      self::PARAM_TYPE_STRING, "Logging options: \"e\" - errors, \"i\" - information,"
-        . "\"s\" - status messages, \"o\" - overwrite log file");
+      self::PARAM_TYPE_STRING, "Logging options: \"e\" - errors, \"i\" - information, \"d\" - debug,"
+        . " \"s\" - status messages, \"o\" - overwrite log file");
 
     $this->declareParameter('verbocity', 'v', $this->options['verbocity_default'],
-      self::PARAM_TYPE_STRING, "Verbocity options: \"e\" - errors, \"i\" - information,"
+      self::PARAM_TYPE_STRING, "Verbocity options: \"e\" - errors, \"i\" - information, \"d\" - debug,"
         . " \"s\" - status messages, \"p\" - progress indication");
   }
 
@@ -636,6 +637,16 @@ class CLIApplication
   }
 
   /**
+   * Output debug message
+   *
+   * @param string $message
+   */
+  public function debug($message)
+  {
+    $this->out(self::MESSAGE_DEBUG, $message);
+  }
+
+  /**
    * Output error message
    *
    * @param string $message
@@ -679,7 +690,8 @@ class CLIApplication
   {
     return $this->logging_options[self::MESSAGE_STATUS] ||
       $this->logging_options[self::MESSAGE_ERROR] ||
-      $this->logging_options[self::MESSAGE_INFORMATION];
+      $this->logging_options[self::MESSAGE_INFORMATION] ||
+      $this->logging_options[self::MESSAGE_DEBUG];
   }
 
   /**
@@ -814,6 +826,7 @@ class CLIApplication
     $this->logging_options[self::MESSAGE_STATUS] = false;
     $this->logging_options[self::MESSAGE_ERROR] = false;
     $this->logging_options[self::MESSAGE_INFORMATION]= false;
+    $this->logging_options[self::MESSAGE_DEBUG]= false;
     $this->logging_options[self::LOG_PROGRESS] = false;
     $this->logging_options[self::LOG_OVERWRITE] = false;
   }
@@ -828,6 +841,7 @@ class CLIApplication
     $this->verbocity_options[self::MESSAGE_STATUS] = false;
     $this->verbocity_options[self::MESSAGE_ERROR] = false;
     $this->verbocity_options[self::MESSAGE_INFORMATION]= false;
+    $this->verbocity_options[self::MESSAGE_DEBUG]= false;
     $this->verbocity_options[self::VERB_PROGRESS]= false;
   }
 
@@ -841,6 +855,7 @@ class CLIApplication
     $this->verbocity_options[self::MESSAGE_STATUS] = $this->_have_verbocity_flag(self::MESSAGE_STATUS);
     $this->verbocity_options[self::MESSAGE_ERROR] = $this->_have_verbocity_flag(self::MESSAGE_ERROR);
     $this->verbocity_options[self::MESSAGE_INFORMATION]= $this->_have_verbocity_flag(self::MESSAGE_INFORMATION);
+    $this->verbocity_options[self::MESSAGE_DEBUG]= $this->_have_verbocity_flag(self::MESSAGE_DEBUG);
     $this->verbocity_options[self::VERB_PROGRESS]= $this->_have_verbocity_flag(self::VERB_PROGRESS);
 
     // Read logging options
@@ -848,6 +863,7 @@ class CLIApplication
     $this->logging_options[self::MESSAGE_STATUS] = $this->_have_logging_flag(self::MESSAGE_STATUS);
     $this->logging_options[self::MESSAGE_ERROR] = $this->_have_logging_flag(self::MESSAGE_ERROR);
     $this->logging_options[self::MESSAGE_INFORMATION]= $this->_have_logging_flag(self::MESSAGE_INFORMATION);
+    $this->logging_options[self::MESSAGE_DEBUG]= $this->_have_logging_flag(self::MESSAGE_DEBUG);
     $this->logging_options[self::LOG_PROGRESS] = $this->_have_logging_flag(self::LOG_PROGRESS);
     $this->logging_options[self::LOG_OVERWRITE] = $this->_have_logging_flag(self::LOG_OVERWRITE);
 
