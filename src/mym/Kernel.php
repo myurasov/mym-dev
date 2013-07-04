@@ -38,12 +38,12 @@ class Kernel
 
       // Call controller
 
-      $controller = new $controller($request);
-
+      $controller = new $controller($request /* pass Request in constructor */);
       $response = $controller->$action($request);
 
-      if (!($response instanceof Response))
+      if (!($response instanceof Response)) {
         throw new Exception("Response object should be returned");
+      }
     };
 
     if (Config::$options["http"]["catchExceptions"])
