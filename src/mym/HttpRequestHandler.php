@@ -46,7 +46,22 @@ class HttpRequestHandler
 
       $controllerClass = $this->controller[0];
       $action = $this->controller[1];
-      return call_user_func([new $controllerClass($this->request), $action], $this->request);
+
+      if (!class_exists($controllerClass)) {
+        throw new Exception\HttpNotFoundException("Controller class '{$controllerClass}' not found");
+      }
+
+      if (!method_exists($controllerClass, $action)) {
+        throw new Exception\HttpNotFoundException("Method '{$controllerClass}::{$action}' does not exist");
+      }
+
+      $response = call_user_func([new $controllerClass($this->request), $action], $this->request);
+
+      if (false === $response) {
+        throw new \Exception('Error calling controller');
+      }
+
+      return $response;
 
     } else if (is_callable($this->controller)) {
       return call_user_func($this->controller, $this->request);
@@ -66,6 +81,10 @@ class HttpRequestHandler
     try {
 
         $this->processRequest();
+
+        if (!($this->response instanceof Response)) {
+          throw new \Exception('Controller should return Response object');
+        }
 
       } catch (\Exception $e) {
 
