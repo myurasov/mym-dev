@@ -29,6 +29,7 @@ class SerializedResponse extends Response
     parent::__construct();
     $this->data = $data;
     $this->setFormat($format);
+    $this->setProtocolVersion('1.1');
   }
 
   /**
