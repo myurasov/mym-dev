@@ -19,5 +19,3 @@ class Kernel
     define('mym\ERROR_MISC', -1);
   }
 }
-
-Kernel::init();
