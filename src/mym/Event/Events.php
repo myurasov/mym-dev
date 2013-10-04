@@ -30,7 +30,7 @@ trait Events {
   }
 
   public function fireEvent(Event $event) {
-    $name = $event->getName();
+    $name = $event::NAME;
 
     if (empty($name)) {
       throw new \Exception("Event name cannot be empty");

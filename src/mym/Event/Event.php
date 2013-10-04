@@ -7,33 +7,30 @@
 
 namespace mym\Event;
 
-class Event {
+class Event
+{
+  const NAME = 'event';
 
-  protected $name = null;
   protected $source = null;
   protected $stopPropagation = false;
 
-  public function getName() {
-    return $this->name;
-  }
-
-  public function setName($name) {
-    $this->name = $name;
-  }
-
-  public function getSource() {
+  public function getSource()
+  {
     return $this->source;
   }
 
-  public function setSource($source) {
+  public function setSource($source)
+  {
     $this->source = $source;
   }
 
-  public function getStopPropagation() {
+  public function getStopPropagation()
+  {
     return $this->stopPropagation;
   }
 
-  public function setStopPropagation($stopPropagation) {
+  public function setStopPropagation($stopPropagation)
+  {
     $this->stopPropagation = $stopPropagation;
   }
 }
