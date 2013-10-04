@@ -7,13 +7,21 @@
 namespace mym;
 
 trait Singleton {
-  private static $instance;
+  protected static $instance;
 
   public static function getInstance() {
-    if (is_null(self::$instance)) {
-      self::$instance = new self();
-    }
+   if (is_null(static::$instance)) {
+      new static();
+   }
 
-    return self::$instance;
+    return static::$instance;
+  }
+
+  public function __construct() {
+    if (static::$instance) {
+      throw new \Exception('Class ' . get_called_class() .' is a singleton');
+    } else {
+      static::$instance = $this;
+    }
   }
 }
