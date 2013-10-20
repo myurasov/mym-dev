@@ -22,7 +22,7 @@ abstract class AbstractAuthService
 
   abstract public function getUserId($token);
 
-  abstract public function setUserId($token, $userId);
+  abstract public function setUserId($token, $userId, $updateExpiration = false);
 
   public function createToken($userId)
   {
@@ -64,7 +64,7 @@ abstract class AbstractAuthService
       '/',
       $this->cookieDomain,
       false,
-      false
+      true
     );
 
     $response->headers->setCookie($cookie);
@@ -72,7 +72,7 @@ abstract class AbstractAuthService
 
   public function clearTokenCookie(Response $response)
   {
-    $cookie = new Cookie($this->tokenName, '', 0, '/', $this->cookieDomain, false, false);
+    $cookie = new Cookie($this->tokenName, '', 0, '/', $this->cookieDomain, false, true);
     $response->headers->setCookie($cookie);
   }
 
