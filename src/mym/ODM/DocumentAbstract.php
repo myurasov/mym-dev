@@ -116,6 +116,4 @@ abstract class DocumentAbstract
 
     return true;
   }
-
-  abstract public static function load($id = "", $require = false);
 }
