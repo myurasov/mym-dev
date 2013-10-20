@@ -6,7 +6,7 @@
  * @copyright 2012-2013, Mikhail Yurasov
  */
 
-namespace mym\Component\Facebook;
+namespace mym\Controller;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -14,33 +14,33 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Session\Session;
 use mym\Component\Facebook\Facebook;
 
-trait FacebookAuthController {
+trait FacebookAuthControllerTrait {
 
-  private $facebookCallbackUrl; // callback url, without parameters
+  protected $facebookCallbackUrl; // callback url, without parameters
 
-  private $facebookConfig = array(
+  protected $facebookConfig = array(
     'appId' => null,
     'secret' => null,
     'certFile' => null
   );
 
-  private $facebookScope = ''; // access scope
-  private $facebookAccessToken = '';
+  protected $facebookScope = ''; // access scope
+  protected $facebookAccessToken = '';
 
   /**
    * @var Response
    */
-  private $response;
+  protected $response;
 
   /**
    * @var Request
    */
-  private $request;
+  protected $request;
 
   /**
    * @var Session
    */
-  private $session;
+  protected $session;
 
   public function facebookLoginAction(Request $request) {
     $response = new Response();
@@ -60,8 +60,8 @@ trait FacebookAuthController {
     ));
 
     // save state (CSRF token)
-    $sesion = new Session();
-    $sesion->set("facebookState", $fb->getState());
+    $session = new Session();
+    $session->set("facebookState", $fb->getState());
 
     // redirect to login page
     $response->headers->set("Location", $url);
@@ -101,7 +101,6 @@ trait FacebookAuthController {
         $this->getRedirectUrl($returnUrl)
       );
 
-      $this->setSession($session);
       $this->setFacebookAccessToken($facebookAccessToken);
 
       //
