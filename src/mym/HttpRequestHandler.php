@@ -117,6 +117,11 @@ class HttpRequestHandler
         }
     }
 
+    // force HTTP 1.1
+    if (Config::$options['http']['forceProtocolVersion']) {
+      $this->response->setProtocolVersion(Config::$options['http']['forceProtocolVersion']);
+    }
+
     // send response
     $this->response->send();
   }
