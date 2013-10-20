@@ -31,13 +31,6 @@ class MongoAuthService extends AbstractAuthService
     );
   }
 
-  public function createToken($userId)
-  {
-    $token = $this->generateToken();
-    $this->setUserId($token, $userId, true);
-    return $token;
-  }
-
   public function setUserId($token, $userId, $updateExpiration = false)
   {
     $data = [

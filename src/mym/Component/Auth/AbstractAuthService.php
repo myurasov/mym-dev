@@ -24,11 +24,11 @@ abstract class AbstractAuthService
 
   abstract public function setUserId($token, $userId);
 
-  abstract public function createToken($userId);
-
-  protected function generateToken()
+  public function createToken($userId)
   {
-    return Strings::createRandomString(null, Strings::ALPHABET_ALPHANUMERICAL, 256);
+    $token = Strings::createRandomString(null, Strings::ALPHABET_ALPHANUMERICAL, 256);
+    $this->setUserId($token, $userId, true);
+    return $token;
   }
 
   public function getTokenFromRequest(Request $request)
