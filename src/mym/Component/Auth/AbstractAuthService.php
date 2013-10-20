@@ -12,7 +12,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Cookie;
 
-class AbstractAuthService
+abstract class AbstractAuthService
 {
   use Singleton;
 
@@ -20,17 +20,11 @@ class AbstractAuthService
   protected $tokenLifetime;
   protected $cookieDomain;
 
-  public function getUserId($token)
-  {
-  }
+  abstract public function getUserId($token);
 
-  public function setUserId($token, $userId)
-  {
-  }
+  abstract public function setUserId($token, $userId);
 
-  public function createToken($userId)
-  {
-  }
+  abstract public function createToken($userId);
 
   protected function generateToken()
   {
