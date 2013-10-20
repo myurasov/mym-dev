@@ -17,7 +17,12 @@ abstract class CLICommand
 
   public function __construct()
   {
-    $this->ca = new CLIApplication();
+    $this->ca = new CLIApplication([
+      'verbocity_default' => 'sei',
+      'script_name' => get_called_class(),
+      'script_version' => '1.0'
+    ]);
+
     $this->setup();
   }
 
