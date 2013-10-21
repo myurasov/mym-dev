@@ -6,6 +6,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use mym\Exception\HTTPException;
+use mym\Exception\HttpMethodNotAllowedException;
 
 class HttpRequestHandler
 {
@@ -107,6 +108,11 @@ class HttpRequestHandler
           } else {
             // return text/html error message
             $this->response = new Response($e->getMessage(), $httpCode);
+          }
+
+          // add Allow header (required with HTTP 405 Method Not Allowed)
+          if ($e instanceof HttpMethodNotAllowedException) {
+            $this->response->headers->set('Allow', $e->getAllowedMethods());
           }
 
         } else {
