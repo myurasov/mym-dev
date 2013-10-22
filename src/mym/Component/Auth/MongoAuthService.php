@@ -51,6 +51,12 @@ class MongoAuthService extends AbstractAuthService
     return isset($res['userId']) ? $res['userId'] : false;
   }
 
+  public function getExpiration($token)
+  {
+    $res = $this->mongoCollection->findOne(['_id' => $token]);
+    return isset($res['expires']) ? \DateTime::createFromFormat('U', $res['expires']->sec) : false;
+  }
+
   //
 
   public function getMongoClient()

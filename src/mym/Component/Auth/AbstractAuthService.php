@@ -25,6 +25,8 @@ abstract class AbstractAuthService
 
   abstract public function setUserId($token, $userId, $updateExpiration = false);
 
+  abstract public function getExpiration($token);
+
   public function createToken($userId)
   {
     $token = Strings::createRandomString(null, Strings::ALPHABET_ALPHANUMERICAL, 256);
