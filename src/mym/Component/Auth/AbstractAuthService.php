@@ -18,6 +18,7 @@ abstract class AbstractAuthService
 
   protected $tokenName;
   protected $tokenLifetime;
+
   protected $cookieDomain;
 
   abstract public function getUserId($token);
