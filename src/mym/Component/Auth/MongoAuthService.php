@@ -26,8 +26,8 @@ class MongoAuthService extends AbstractAuthService
     );
 
     $this->mongoCollection->ensureIndex(
-      ['date' => 1],
-      ['expireAfterSeconds' => $this->tokenLifetime]
+      ['expires' => 1],
+      ['expireAfterSeconds' => 0]
     );
   }
 
@@ -39,7 +39,7 @@ class MongoAuthService extends AbstractAuthService
     ];
 
     if ($updateExpiration) {
-      $data['date'] = new \MongoDate();
+      $data['expires'] = new \MongoDate(time() + $this->tokenLifetime);
     }
 
     $this->mongoCollection->save($data);
