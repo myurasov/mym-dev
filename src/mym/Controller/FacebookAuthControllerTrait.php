@@ -48,6 +48,7 @@ trait FacebookAuthControllerTrait {
 
     // url to return to
     $returnUrl = $request->query->get("returnUrl", $request->server->get("HTTP_REFERER"));
+    $returnUrl = empty($returnUrl) ? $request->server->get("HTTP_REFERER") : $returnUrl;
 
     // get login url
 
