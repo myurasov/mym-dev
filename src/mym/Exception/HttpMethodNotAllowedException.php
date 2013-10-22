@@ -31,5 +31,6 @@ class HttpMethodNotAllowedException extends HTTPException {
   public function setAllowedMethods($allowedMethods)
   {
     $this->allowedMethods = $allowedMethods;
+    return $this;
   }
 }
