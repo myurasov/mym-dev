@@ -15,6 +15,8 @@ use mym\Util\Strings;
 use mym\Util\Text;
 use \Exception;
 
+use mym\Exception\MissingRequiredParameterException;
+
 class CLIApplication
 {
   // <Constants>
@@ -346,10 +348,16 @@ class CLIApplication
    * @param mixed $type
    * @param string $description
    */
-  public function declareParameter($name, $alias, $default_value = null, $type = self::PARAM_TYPE_AUTO, $description = '')
+  public function declareParameter($name, $alias, $default_value = null, $type = self::PARAM_TYPE_AUTO, $description = '', $required =  false)
   {
-    $this->declared_parameters[$name] = array('alias' => $alias,
-      'default' => $default_value, 'type' => $type, 'desc' => $description);
+    $this->declared_parameters[$name] = array(
+      'alias' => $alias,
+      'default' => $default_value,
+      'type' => $type,
+      'desc' => $description,
+      'required' => $required
+    );
+
     $this->parameters_read = false; // Parameters need to be read
   }
 
@@ -1119,6 +1127,10 @@ class CLIApplication
   {
     $declared_parameter = $this->declared_parameters[$declared_parameter_name];
     $type = $this->_get_declared_parameter_type($declared_parameter_name); // Get parameter type
+
+    if (is_null($arg_value) && $this->declared_parameters[$declared_parameter_name]['required']) {
+      throw new MissingRequiredParameterException('Missing required parameter "' . $declared_parameter_name . '"');
+    }
 
     if (is_null($arg_value))
     {

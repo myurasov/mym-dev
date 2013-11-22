@@ -37,7 +37,9 @@ abstract class CLICommand
 
   public function run()
   {
-    if ($this->ca->getParameter('?'))
+    $help = array_search('?', $GLOBALS['argv']) !== false;
+
+    if ($help)
     {
       $this->ca->displayHelp();
     }
