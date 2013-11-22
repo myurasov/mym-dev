@@ -10,5 +10,5 @@ namespace mym\Event;
 use mym\Singleton;
 
 class EventDispatcher {
-  use Singleton, Events;
+  use Singleton, EventsTrait;
 }

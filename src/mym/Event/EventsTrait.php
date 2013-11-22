@@ -7,7 +7,7 @@
 
 namespace mym\Event;
 
-trait Events {
+trait EventsTrait {
 
   protected $listeners = [];
 
