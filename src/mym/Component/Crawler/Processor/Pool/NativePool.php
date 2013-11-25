@@ -1,12 +1,12 @@
 <?php
 
-namespace mym\Component\Crawler;
+namespace mym\Component\Crawler\Processor\Pool;
 
-use mym\Component\Crawler\ProcessorPoolInterface;
-use mym\Component\Crawler\ProcessorInterface;
+use mym\Component\Crawler\Processor\Pool\PoolInterface;
+use mym\Component\Crawler\Processor\ProcessorInterface;
 use mym\Component\Crawler\Url;
 
-class NativeProcessorPool implements ProcessorPoolInterface
+class NativePool implements PoolInterface
 {
   /**
    * @var ProcessorInterface[]
@@ -18,7 +18,7 @@ class NativeProcessorPool implements ProcessorPoolInterface
    */
   private $extractedUrls = [];
 
-  public function process(Url $url)
+  public function process(Url &$url)
   {
     $this->extractedUrls = [];
 

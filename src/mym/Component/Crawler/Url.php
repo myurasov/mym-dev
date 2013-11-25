@@ -4,20 +4,33 @@ namespace mym\Component\Crawler;
 
 class Url
 {
+  const STATUS_NEW = 'new';
+  const STATUS_OK = 'ok';
+  const STATUS_ERROR = 'error';
+
   private $url = '';
   private $depth = 0;
+  private $status = self::STATUS_NEW;
+
+  private $createdAt;
+  private $updatedAt = null;
 
   public function __construct($url = '', $depth = 0)
   {
+    $this->createdAt = microtime(true);
     $this->setUrl($url);
     $this->setDepth($depth);
   }
 
   public function toArray()
   {
-    return array_diff_key(get_object_vars($this), [
-      // keys to remove
-      // key => 1
+    return array_intersect_key(get_object_vars($this), [
+      // keys to expose
+      'url' => 1,
+      'depth' => 1,
+      'status' => 1,
+      'createdAt' => 1,
+      'updatedAt' => 1
     ]);
   }
 
@@ -26,7 +39,10 @@ class Url
     $data = array_intersect_key($data, [
       // keys to use
       'url' => 1,
-      'depth' => 1
+      'depth' => 1,
+      'status' => 1,
+      'createdAt' => 1,
+      'updatedAt' => 1
     ]);
 
     foreach ($data as $k => $v) {
@@ -41,6 +57,11 @@ class Url
   public function getId()
   {
     return md5($this->url);
+  }
+
+  public function refreshUpdatedAt()
+  {
+    $this->updatedAt = microtime(true);
   }
 
   // <editor-fold defaultstate="collapsed" desc="accessors">
@@ -63,6 +84,36 @@ class Url
   public function setDepth($depth)
   {
     $this->depth = $depth;
+  }
+
+  public function getStatus()
+  {
+    return $this->status;
+  }
+
+  public function setStatus($status)
+  {
+    $this->status = $status;
+  }
+
+  public function getCreatedAt()
+  {
+    return $this->createdAt;
+  }
+
+  public function setCreatedAt($createdAt)
+  {
+    $this->createdAt = $createdAt;
+  }
+
+  public function getUpdatedAt()
+  {
+    return $this->updatedAt;
+  }
+
+  public function setUpdatedAt($updatedAt)
+  {
+    $this->updatedAt = $updatedAt;
   }
 
   // </editor-fold>

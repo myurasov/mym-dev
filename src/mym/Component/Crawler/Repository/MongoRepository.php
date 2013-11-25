@@ -1,8 +1,11 @@
 <?php
 
-namespace mym\Component\Crawler;
+namespace mym\Component\Crawler\Repository;
 
-class MongoRepository
+use mym\Component\Crawler\Url;
+use mym\Component\Crawler\Repository\RepositoryInterface;
+
+class MongoRepository implements RepositoryInterface
 {
   private $server = '';
   private $db = '';
@@ -37,11 +40,11 @@ class MongoRepository
     // indexes
 
     $this->mongoCollection->ensureIndex([
-      'updatedAt' => 1 /* ASC */
+      'data.updatedAt' => 1 /* ASC */
     ]);
 
     $this->mongoCollection->ensureIndex([
-      'createdAt' => 1 /* ASC */
+      'data.createdAt' => 1 /* ASC */
     ]);
 
     $this->mongoCollection->ensureIndex([
@@ -53,7 +56,7 @@ class MongoRepository
     ]);
   }
 
-  private function createQuery()
+  private function createNextQuery()
   {
     $query = [
       'data.depth' => ['$lte' => $this->maxDepth],
@@ -62,11 +65,11 @@ class MongoRepository
 
     // min age sice last update
     if (-1 === $this->minAgeToReprocess) {
-      $query['updatedAt'] = null;
+      $query['data.status'] = Url::STATUS_NEW;
     } else {
       $query['$or'] = [
-        ['updatedAt' => ['$lte' => new \MongoDate(time() - $this->minAgeToReprocess)]],
-        ['updatedAt' => null]
+        ['data.updatedAt' => ['$lte' => microtime(true) - $this->minAgeToReprocess]],
+        ['data.status' => Url::STATUS_NEW]
       ];
     }
 
@@ -78,9 +81,9 @@ class MongoRepository
    */
   public function next()
   {
-    $data = $this->mongoCollection->findAndModify($this->createQuery(), [
+    $data = $this->mongoCollection->findAndModify($this->createNextQuery(), [
       '$set' => ['processing' => true]
-    ], null, ['createdAt' => 1]);
+    ], null, ['data.createdAt' => 1]);
 
     if (!empty($data)) {
       $url = new Url();
@@ -93,7 +96,7 @@ class MongoRepository
 
   public function count()
   {
-    return $this->mongoCollection->count($this->createQuery());
+    return $this->mongoCollection->count($this->createNextQuery());
   }
 
   /**
@@ -123,27 +126,28 @@ class MongoRepository
     $this->mongoCollection->remove(['_id' => $key]);
   }
 
-  public function update(Url $url)
+  public function update(Url &$url)
   {
+    $url->refreshUpdatedAt();
+
     $this->mongoCollection->update([
       '_id' => $url->getId(),
     ], [
-      'data' => $url->toArray(),
-      'updatedAt' => new \MongoDate()
+      'data' => $url->toArray()
     ]);
   }
 
   /**
    * Mark Url as done
-   *
-   * @param \mym\Component\Crawler\Url $url
    */
-  public function done(Url $url)
+  public function done(Url &$url)
   {
+    $url->refreshUpdatedAt();
+
     $this->mongoCollection->findAndModify([
       '_id' => $url->getId(),
     ], ['$set' => [
-      'updatedAt' => new \MongoDate(),
+      'data' => $url->toArray(),
       'processing' => false
     ]]);
   }
@@ -153,7 +157,6 @@ class MongoRepository
     try {
       $this->mongoCollection->insert([
         '_id' => $url->getId(),
-        'createdAt' => new \MongoDate(),
         'processing' => false,
         'data' => $url->toArray()
       ]);

@@ -1,10 +1,16 @@
 <?php
 
-namespace mym\Component\Crawler;
+namespace mym\Component\Crawler\Processor\Pool;
 
-interface ProcessorPoolInterface
+use mym\Component\Crawler\Url;
+use mym\Component\Crawler\Processor\ProcessorInterface;
+
+/**
+ * Processor pool interface
+ */
+interface PoolInterface
 {
-  public function process(Url $url);
+  public function process(Url &$url);
   public function addProcessor(ProcessorInterface $processor);
   public function getProcessors();
   public function setProcessors(ProcessorInterface $processors);

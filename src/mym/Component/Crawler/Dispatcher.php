@@ -2,6 +2,10 @@
 
 namespace mym\Component\Crawler;
 
+use mym\Component\Crawler\Repository\RepositoryInterface;
+use mym\Component\Crawler\Processor\Pool\Adapter\AdapterInterface;
+use mym\Component\Crawler\Url;
+
 class Dispatcher
 {
   /**
@@ -10,39 +14,14 @@ class Dispatcher
   private $urls = [];
 
   /**
-   * @var MongoRepository
+   * @var RepositoryInterface
    */
   private $repository;
 
   /**
-   * @var ProcessorPoolAdapterInterface
+   * @var AdapterInterface
    */
   private $processorPoolAdapter;
-
-  public function run_()
-  {
-    foreach ($this->urls as $i => $url /* @var $url Url */) {
-      $this->processorPoolAdapter->process($url);
-      unset($this->urls[$i]);
-
-      foreach ($this->processorPoolAdapter->getExtractedUrls() as $extractedUrl) {
-        $this->repository->save($extractedUrl);
-      }
-
-      $this->urls = array_merge(
-        $this->urls, $this->processorPoolAdapter->getExtractedUrls()
-      );
-
-//      print_r($this->processorPoolAdapter->getExtractedUrls());
-      echo "count: ";
-      print_r(count($this->urls));
-      echo "\nmem: ";
-      print_r(memory_get_usage(true)/1024/1024);
-      echo "\n\n";
-    }
-
-    $this->run();
-  }
 
   public function run()
   {
@@ -51,8 +30,6 @@ class Dispatcher
       echo "url (L{$url->getDepth()}) (left {$this->repository->count()}): ", $url->getUrl(), "\n";
 
       $this->processorPoolAdapter->process($url);
-
-//      echo "mem: ", memory_get_peak_usage(true) / 1024 / 1024, "\n";
 
       foreach ($this->processorPoolAdapter->getExtractedUrls() as $extractedUrl) {
         $this->repository->insert($extractedUrl);
@@ -79,7 +56,7 @@ class Dispatcher
     return $this->processorPoolAdapter;
   }
 
-  public function setProcessorPoolAdapter(ProcessorPoolAdapterInterface $processorPoolAdapter)
+  public function setProcessorPoolAdapter(AdapterInterface $processorPoolAdapter)
   {
     $this->processorPoolAdapter = $processorPoolAdapter;
   }
@@ -89,7 +66,7 @@ class Dispatcher
     return $this->repository;
   }
 
-  public function setRepository($repository)
+  public function setRepository(RepositoryInterface $repository)
   {
     $this->repository = $repository;
   }
