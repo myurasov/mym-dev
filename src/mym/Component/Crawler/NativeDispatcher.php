@@ -11,6 +11,7 @@ use mym\Component\Crawler\Repository\RepositoryInterface;
 use mym\Component\Crawler\Processor\ProcessorPool;
 
 use mym\Component\Crawler\DispatcherInterface;
+use Psr\Log\LoggerInterface;
 
 class NativeDispatcher implements DispatcherInterface
 {
@@ -41,6 +42,11 @@ class NativeDispatcher implements DispatcherInterface
       }
 
       $this->repository->done($url);
+
+      if ($this->logger) {
+        $c = count($this->processorPool->getExtractedUrls());
+        $this->logger->info("url: {$url->getUrl()} / status: {$url->getStatus()} / extracted: {$c}");
+      }
     }
   }
 

@@ -13,6 +13,7 @@ use mym\Component\GearmanTools\GearmanTaskPool;
 use mym\Component\GearmanTools\Utils as GearmanToolsUtils;
 
 use mym\Component\Crawler\DispatcherInterface;
+use Psr\Log\LoggerInterface;
 
 class GearmanDispatcher implements DispatcherInterface
 {
@@ -80,12 +81,17 @@ class GearmanDispatcher implements DispatcherInterface
   {
     $data = GearmanToolsUtils::unpackMessage($task->data());
 
-    $url = $data['url'];
+    $url /* @var $url Url */ = $data['url'];
     $extractedUrls = $data['extractedUrls'];
 
     // add extracted url
     foreach ($extractedUrls as $extractedUrl /* @var $extractedUrl Url */) {
       $this->repository->insert($extractedUrl);
+    }
+
+    if ($this->logger) {
+      $c = count($extractedUrls);
+      $this->logger->info("url: {$url->getUrl()} / status: {$url->getStatus()} / extracted: {$c}");
     }
 
     // mark Url as processed
