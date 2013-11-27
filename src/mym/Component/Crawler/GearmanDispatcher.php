@@ -12,10 +12,9 @@ use mym\Component\Crawler\Repository\RepositoryInterface;
 use mym\Component\GearmanTools\GearmanTaskPool;
 use mym\Component\GearmanTools\Utils as GearmanToolsUtils;
 
-use Psr\Log\LoggerInterface;
-use Psr\Log\LoggerAwareInterface;
+use mym\Component\Crawler\DispatcherInterface;
 
-class GearmanDispatcher implements LoggerAwareInterface
+class GearmanDispatcher implements DispatcherInterface
 {
   /**
    * Number of tasks to run in parallel

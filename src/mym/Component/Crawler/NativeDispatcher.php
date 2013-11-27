@@ -10,10 +10,9 @@ use mym\Component\Crawler\Url;
 use mym\Component\Crawler\Repository\RepositoryInterface;
 use mym\Component\Crawler\Processor\ProcessorPool;
 
-use Psr\Log\LoggerInterface;
-use Psr\Log\LoggerAwareInterface;
+use mym\Component\Crawler\DispatcherInterface;
 
-class NativeDispatcher implements LoggerAwareInterface
+class NativeDispatcher implements DispatcherInterface
 {
   /**
    * @var RepositoryInterface
