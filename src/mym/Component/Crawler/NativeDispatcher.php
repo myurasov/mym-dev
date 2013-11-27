@@ -35,8 +35,6 @@ class NativeDispatcher implements DispatcherInterface
     while ($url /* @var $url Url */ = $this->repository->next()) {
       $this->processorPool->process($url);
 
-      echo "url: ", $url->getUrl(), "\n";
-
       foreach ($this->processorPool->getExtractedUrls() as $eu /* @var $eu Url */) {
         $this->repository->insert($eu);
       }
