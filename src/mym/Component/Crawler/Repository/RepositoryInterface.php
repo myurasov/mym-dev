@@ -7,6 +7,8 @@ use mym\Component\Crawler\Url;
 interface RepositoryInterface
 {
   /**
+   * Sets processing flag to true
+   *
    * @return Url|false
    */
   public function next();
@@ -20,7 +22,7 @@ interface RepositoryInterface
   public function update(Url &$url);
 
   /**
-   * Mark Url as done
+   * Sets processing flag to false
    */
   public function done(Url &$url);
 

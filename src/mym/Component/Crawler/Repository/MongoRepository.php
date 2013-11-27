@@ -36,24 +36,31 @@ class MongoRepository implements RepositoryInterface
     // connect to the database
     $mongoClient = new \MongoClient($this->server);
     $this->mongoCollection = $mongoClient->selectCollection($this->db, $this->collection);
+  }
 
-    // indexes
+  private function createIndexes()
+  {
+    static $indexesCreated = false;
 
-    $this->mongoCollection->ensureIndex([
-      'data.updatedAt' => 1 /* ASC */
-    ]);
+    if (!$indexesCreated) {
+      $this->mongoCollection->ensureIndex([
+        'data.updatedAt' => 1 /* ASC */
+      ]);
 
-    $this->mongoCollection->ensureIndex([
-      'data.createdAt' => 1 /* ASC */
-    ]);
+      $this->mongoCollection->ensureIndex([
+        'data.createdAt' => 1 /* ASC */
+      ]);
 
-    $this->mongoCollection->ensureIndex([
-      'data.depth' => 1
-    ]);
+      $this->mongoCollection->ensureIndex([
+        'data.depth' => 1
+      ]);
 
-    $this->mongoCollection->ensureIndex([
-      'data.status' => 1
-    ]);
+      $this->mongoCollection->ensureIndex([
+        'data.status' => 1
+      ]);
+
+      $indexesCreated = true;
+    }
   }
 
   private function createNextQuery()
@@ -169,6 +176,8 @@ class MongoRepository implements RepositoryInterface
 
       throw $e;
     }
+
+    $this->createIndexes();
 
     return true;
   }

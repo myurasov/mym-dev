@@ -17,7 +17,7 @@ class Url
 
   public function __construct($url = '', $depth = 0)
   {
-    $this->createdAt = microtime(true);
+    $this->createdAt = $this->updatedAt = microtime(true);
     $this->setUrl($url);
     $this->setDepth($depth);
   }

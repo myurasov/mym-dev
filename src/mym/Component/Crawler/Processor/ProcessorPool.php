@@ -1,12 +1,11 @@
 <?php
 
-namespace mym\Component\Crawler\Processor\Pool;
+namespace mym\Component\Crawler\Processor;
 
-use mym\Component\Crawler\Processor\Pool\PoolInterface;
 use mym\Component\Crawler\Processor\ProcessorInterface;
 use mym\Component\Crawler\Url;
 
-class NativePool implements PoolInterface
+class ProcessorPool
 {
   /**
    * @var ProcessorInterface[]
