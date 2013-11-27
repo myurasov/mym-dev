@@ -7,7 +7,7 @@
 
 namespace mym\Event;
 
-class Event
+abstract class AbstractEvent
 {
   const NAME = 'event';
 

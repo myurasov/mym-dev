@@ -2,7 +2,7 @@
 
 namespace mym\Event;
 
-class GenericEvent extends Event implements \ArrayAccess, \IteratorAggregate {
+class GenericEvent extends AbstractEvent implements \ArrayAccess, \IteratorAggregate {
 
   protected $arguments;
 

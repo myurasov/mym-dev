@@ -7,6 +7,8 @@
 
 namespace mym\Event;
 
+use mym\Event\AbstractEvent;
+
 trait EventsTrait {
 
   protected $listeners = [];
@@ -29,7 +31,7 @@ trait EventsTrait {
     }
   }
 
-  public function fireEvent(Event $event) {
+  public function fireEvent(AbstractEvent $event) {
     $name = $event::NAME;
 
     if (empty($name)) {
