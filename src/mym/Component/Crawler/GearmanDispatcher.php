@@ -89,6 +89,7 @@ class GearmanDispatcher implements DispatcherInterface
       $this->repository->insert($extractedUrl);
     }
 
+    // log
     if ($this->logger) {
       $c = count($extractedUrls);
       $this->logger->info("url: {$url->getUrl()} / status: {$url->getStatus()} / extracted: {$c}");

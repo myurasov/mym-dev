@@ -41,6 +41,7 @@ class NativeDispatcher implements DispatcherInterface
 
       $this->repository->done($url);
 
+      // log
       if ($this->logger) {
         $c = count($this->processorPool->getExtractedUrls());
         $this->logger->info("url: {$url->getUrl()} / status: {$url->getStatus()} / extracted: {$c}");
