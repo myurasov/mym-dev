@@ -7,6 +7,8 @@ namespace mym\Component\CLI;
  */
 abstract class CLICommand
 {
+  protected $logDir = null;
+
   /**
    * @var CLIApplication
    */
@@ -19,8 +21,12 @@ abstract class CLICommand
   {
     $this->ca = new CLIApplication([
       'verbocity_default' => 'sei',
-      'script_name' => get_called_class(),
-      'script_version' => '1.0'
+      'script_name'         => 'CLI Command ' . \get_called_class(),
+      'script_version'      => '1.0',
+      'script_description'  => 'Command description',
+      'log_file'            => $this->logDir
+        ? ($this->logDir . '/' . basename(get_called_class()) . '.log')
+        : null
     ]);
 
     $this->setup();
@@ -28,11 +34,6 @@ abstract class CLICommand
 
   protected function setup()
   {
-    $this->ca->options->set(array(
-      'script_name'         => 'CLI Command ' . \get_called_class(),
-      'script_version'      => '1.0',
-      'script_description'  => 'Command description',
-    ));
   }
 
   public function run()
