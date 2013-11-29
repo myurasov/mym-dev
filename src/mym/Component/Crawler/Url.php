@@ -7,10 +7,12 @@ class Url
   const STATUS_NEW = 'new';
   const STATUS_OK = 'ok';
   const STATUS_ERROR = 'error';
+  const STATUS_REJECTED = 'rejected'; // no processor accepts the url
 
   private $url = '';
   private $depth = 0;
   private $status = self::STATUS_NEW;
+  private $metadata = []; // additional data associated with url (type, etc)
 
   private $createdAt;
   private $updatedAt = null;
@@ -30,7 +32,8 @@ class Url
       'depth' => 1,
       'status' => 1,
       'createdAt' => 1,
-      'updatedAt' => 1
+      'updatedAt' => 1,
+      'metadata' => 1
     ]);
   }
 
@@ -42,7 +45,8 @@ class Url
       'depth' => 1,
       'status' => 1,
       'createdAt' => 1,
-      'updatedAt' => 1
+      'updatedAt' => 1,
+      'metadata' => 1
     ]);
 
     foreach ($data as $k => $v) {
@@ -62,6 +66,20 @@ class Url
   public function refreshUpdatedAt()
   {
     $this->updatedAt = microtime(true);
+  }
+
+  /**
+   * @param array|string $metadata
+   * @param mixed $value
+   */
+  public function setMetadata($metadata)
+  {
+    if (is_array($metadata)) {
+      $this->metadata = array_merge($this->metadata, $metadata);
+    } else if (is_string($metadata)) {
+      $value = func_get_arg(1);
+      $this->metadata[$metadata] = $value;
+    }
   }
 
   // <editor-fold defaultstate="collapsed" desc="accessors">
@@ -114,6 +132,11 @@ class Url
   public function setUpdatedAt($updatedAt)
   {
     $this->updatedAt = $updatedAt;
+  }
+
+  public function getMetadata()
+  {
+    return $this->metadata;
   }
 
   // </editor-fold>

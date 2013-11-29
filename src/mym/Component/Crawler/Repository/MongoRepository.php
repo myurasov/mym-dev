@@ -44,19 +44,19 @@ class MongoRepository implements RepositoryInterface
 
     if (!$indexesCreated) {
       $this->mongoCollection->ensureIndex([
-        'data.updatedAt' => 1 /* ASC */
+        'url.updatedAt' => 1 /* ASC */
       ]);
 
       $this->mongoCollection->ensureIndex([
-        'data.createdAt' => 1 /* ASC */
+        'url.createdAt' => 1 /* ASC */
       ]);
 
       $this->mongoCollection->ensureIndex([
-        'data.depth' => 1
+        'url.depth' => 1
       ]);
 
       $this->mongoCollection->ensureIndex([
-        'data.status' => 1
+        'url.status' => 1
       ]);
 
       $indexesCreated = true;
@@ -66,17 +66,17 @@ class MongoRepository implements RepositoryInterface
   private function createNextQuery()
   {
     $query = [
-      'data.depth' => ['$lte' => $this->maxDepth],
+      'url.depth' => ['$lte' => $this->maxDepth],
       'processing' => false,
     ];
 
     // min age sice last update
     if (-1 === $this->minAgeToReprocess) {
-      $query['data.status'] = Url::STATUS_NEW;
+      $query['url.status'] = Url::STATUS_NEW;
     } else {
       $query['$or'] = [
-        ['data.updatedAt' => ['$lte' => microtime(true) - $this->minAgeToReprocess]],
-        ['data.status' => Url::STATUS_NEW]
+        ['url.updatedAt' => ['$lte' => microtime(true) - $this->minAgeToReprocess]],
+        ['url.status' => Url::STATUS_NEW]
       ];
     }
 
@@ -90,11 +90,11 @@ class MongoRepository implements RepositoryInterface
   {
     $data = $this->mongoCollection->findAndModify($this->createNextQuery(), [
       '$set' => ['processing' => true]
-    ], null, ['data.createdAt' => 1]);
+    ], null, ['sort' => ['url.updatedAt' => 1]]);
 
     if (!empty($data)) {
       $url = new Url();
-      $url->fromArray($data['data']);
+      $url->fromArray($data['url']);
       return $url;
     }
 
@@ -106,15 +106,25 @@ class MongoRepository implements RepositoryInterface
     return $this->mongoCollection->count($this->createNextQuery());
   }
 
-  /**
-   *
-   */
   public function resetProcessing()
   {
-    $this->mongoCollection->findAndModify([
+    $this->mongoCollection->update([
       'processing' => true
     ], [
       '$set' => ['processing' => false]
+    ], [
+      'multiple' => true
+    ]);
+  }
+
+  public function resetStatus($status)
+  {
+    $this->mongoCollection->update([
+      'url.status' => $status
+    ], [
+      '$set' => ['url.status' => Url::STATUS_NEW]
+    ], [
+      'multiple' => true
     ]);
   }
 
@@ -140,7 +150,7 @@ class MongoRepository implements RepositoryInterface
     $this->mongoCollection->update([
       '_id' => $url->getId(),
     ], [
-      'data' => $url->toArray()
+      'url' => $url->toArray()
     ]);
   }
 
@@ -154,7 +164,7 @@ class MongoRepository implements RepositoryInterface
     $this->mongoCollection->findAndModify([
       '_id' => $url->getId(),
     ], ['$set' => [
-      'data' => $url->toArray(),
+      'url' => $url->toArray(),
       'processing' => false
     ]]);
   }
@@ -165,7 +175,7 @@ class MongoRepository implements RepositoryInterface
       $this->mongoCollection->insert([
         '_id' => $url->getId(),
         'processing' => false,
-        'data' => $url->toArray()
+        'url' => $url->toArray()
       ]);
     }
     catch (\MongoCursorException $e) {

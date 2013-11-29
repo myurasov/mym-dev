@@ -17,6 +17,12 @@ interface RepositoryInterface
 
   public function resetProcessing();
 
+  /**
+   * Set urls status to Url::STATUS_NEW insted of $status
+   * @param string $status
+   */
+  public function resetStatus($status);
+
   public function clear();
 
   public function update(Url &$url);

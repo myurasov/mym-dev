@@ -22,18 +22,17 @@ class ProcessorPool
     $this->extractedUrls = [];
 
     foreach ($this->processors as $processor /* @var $processor ProcessorInterface */) {
+      $processor->setExtractedUrls([]);
 
       if ($processor->process($url)) {
-
-        $this->extractedUrls = array_merge(
-          $this->extractedUrls,
-          $processor->getExtractedUrls()
-        );
-
-        break;
+        $this->extractedUrls = $processor->getExtractedUrls();
+        return true;
       }
-
     }
+
+    $url->setStatus(Url::STATUS_REJECTED);
+
+    return false;
   }
 
   public function addProcessor(ProcessorInterface $processor)
