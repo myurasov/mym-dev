@@ -19,7 +19,7 @@ class MongoRepository implements RepositoryInterface
   /**
    * Maximum link depth
    */
-  private $maxDepth;
+  private $maxDepth = 5;
 
   /**
    * Minumum age of urls to be processes since last update [sec].
@@ -83,6 +83,21 @@ class MongoRepository implements RepositoryInterface
     return $query;
   }
 
+  public function get($id)
+  {
+    $data = $this->mongoCollection->findOne([
+      '_id' => $id
+    ]);
+
+    if (!empty($data)) {
+      $url = new Url();
+      $url->fromArray($data['url']);
+      return $url;
+    }
+
+    return false;
+  }
+
   /**
    * @return Url
    */
@@ -131,11 +146,6 @@ class MongoRepository implements RepositoryInterface
   public function clear()
   {
     $this->mongoCollection->drop();
-  }
-
-  public function get($key)
-  {
-    return $this->mongoCollection->find(['_id' => $key]);
   }
 
   public function remove($key)
