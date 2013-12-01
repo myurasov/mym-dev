@@ -13,6 +13,13 @@ interface RepositoryInterface
    */
   public function next();
 
+  /**
+   * Get Url by id
+   * @param string $id
+   * @return Url
+   */
+  public function get($id);
+
   public function count();
 
   public function resetProcessing();
