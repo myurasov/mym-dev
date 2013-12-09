@@ -469,4 +469,10 @@ class Strings
 
     return (float) ($int + $fraction);
   }
+
+  public static function br2nl($str)
+  {
+    return str_replace(['<br>', '<br/>', '<br />'], "\n", $str);
+  }
+
 }
