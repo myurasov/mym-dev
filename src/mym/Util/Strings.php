@@ -475,4 +475,49 @@ class Strings
     return str_replace(['<br>', '<br/>', '<br />'], "\n", $str);
   }
 
+  public static function getFileSizeFromString($s)
+  {
+    if (preg_match('#(\d+)?(\.(\d{1,}))?(?:\s*(B|KB|MB|GB|TB|PB|K\b|M\b|G\b|T\b|P\b|KiB|MiB|GiB|TiB|PiB))?#i', $s, $m)) {
+
+      $int = $m[1];
+      $fraction = intval($m[3]) / pow(10, strlen($m[3]));
+      $unit = isset($m[4]) ? strtolower($m[4]) : '';
+
+      $multipliers = [
+        'b' => 1,
+        'kb' => pow(2, 10),
+        'mb' => pow(2, 20),
+        'gb' => pow(2, 30),
+        'tb' => pow(2, 40),
+        'pb' => pow(2, 50),
+        'k' => pow(2, 10),
+        'm' => pow(2, 20),
+        'g' => pow(2, 30),
+        't' => pow(2, 40),
+        't' => pow(2, 50),
+        'kib' => pow(10, 3),
+        'mib' => pow(10, 6),
+        'gib' => pow(10, 9),
+        'tib' => pow(10, 12),
+        'pib' => pow(10, 15)
+      ];
+
+      if (isset($multipliers[$unit])) {
+
+        return round(($int + $fraction) * $multipliers[$unit]);
+
+      } else if ($unit === '') {
+
+        return round($int + $fraction);
+
+      } else {
+        // unit is unkonwn
+        return false;
+      }
+
+    } else {
+      // wrong format
+      return false;
+    }
+  }
 }
