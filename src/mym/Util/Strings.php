@@ -441,4 +441,32 @@ class Strings
       return sprintf('%.' . $precision . 'f TB', $size / 1024 / 1024 / 1024 / 1024);
     }
   }
+
+  /**
+   * Get price from $##.## - formatted string
+   * @return double|false
+   */
+  public static function getUSDPrice($string)
+  {
+    if (preg_match('#\.(\d{1,2})#', $string, $m)) {
+      $fraction = intval($m[1]) / 100;
+
+      if (preg_match('#([\d\s\'\,]+)\.#', $string, $m)) {
+        $int = intval($m[1]);
+        // $121.43
+      } else {
+        $int = 0;
+        // $.96
+      }
+
+    } else if (preg_match('#[\d\s\'\,]+#', $string, $m)) {
+      // no fraction $25
+      $int = intval($m[0]);
+      $fraction = 0;
+    } else {
+      return false;
+    }
+
+    return (float) ($int + $fraction);
+  }
 }
