@@ -82,6 +82,17 @@ class Url
     }
   }
 
+  public function getMetadata($key = null)
+  {
+    if (is_null($key)) {
+      return $this->metadata;
+    } else if (isset($this->metadata[$key])) {
+      return $this->metadata[$key];
+    } else {
+      return false;
+    }
+  }
+
   // <editor-fold defaultstate="collapsed" desc="accessors">
 
   public function getUrl()
@@ -132,11 +143,6 @@ class Url
   public function setUpdatedAt($updatedAt)
   {
     $this->updatedAt = $updatedAt;
-  }
-
-  public function getMetadata()
-  {
-    return $this->metadata;
   }
 
   // </editor-fold>
