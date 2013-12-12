@@ -8,11 +8,11 @@ namespace mym\Component\Crawler;
 
 use mym\Component\Crawler\Url;
 use mym\Component\Crawler\Repository\RepositoryInterface;
+use mym\Component\Crawler\DispatcherInterface;
 
 use mym\Component\GearmanTools\GearmanTaskPool;
 use mym\Component\GearmanTools\Utils as GearmanToolsUtils;
 
-use mym\Component\Crawler\DispatcherInterface;
 use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
 
@@ -89,6 +89,8 @@ class GearmanDispatcher implements DispatcherInterface
 
     $url /* @var $url Url */ = $data['url'];
     $extractedUrls = $data['extractedUrls'];
+    $error = $data['error'];
+    $message = $data['message'];
 
     // add extracted url
     foreach ($extractedUrls as $extractedUrl /* @var $extractedUrl Url */) {
@@ -96,9 +98,10 @@ class GearmanDispatcher implements DispatcherInterface
     }
 
     // log
-    if ($this->logger) {
-      $c = count($extractedUrls);
-      $this->logger->info("url: {$url->getUrl()} / status: {$url->getStatus()} / extracted: {$c}");
+    if ($error === 0) {
+      $this->logger->info($message);
+    } else {
+      $this->logger->error($message);
     }
 
     // mark Url as processed
