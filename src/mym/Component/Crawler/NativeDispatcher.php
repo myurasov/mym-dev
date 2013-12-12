@@ -9,8 +9,8 @@ namespace mym\Component\Crawler;
 use mym\Component\Crawler\Url;
 use mym\Component\Crawler\Repository\RepositoryInterface;
 use mym\Component\Crawler\Processor\ProcessorPool;
-
 use mym\Component\Crawler\DispatcherInterface;
+
 use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
 
@@ -39,7 +39,14 @@ class NativeDispatcher implements DispatcherInterface
   public function run()
   {
     while ($url /* @var $url Url */ = $this->repository->next()) {
-      $this->processorPool->process($url);
+
+      try {
+        $this->processorPool->process($url);
+      } catch (\Exception $e) {
+        if ($this->logger) {
+          $this->logger->error("Failed to process url [{$url->getId()}] \"{$url->getUrl()}\": {$e->getMessage()}");
+        }
+      }
 
       foreach ($this->processorPool->getExtractedUrls() as $eu /* @var $eu Url */) {
         $this->repository->insert($eu);
@@ -48,10 +55,8 @@ class NativeDispatcher implements DispatcherInterface
       $this->repository->done($url);
 
       // log
-      if ($this->logger) {
-        $c = count($this->processorPool->getExtractedUrls());
-        $this->logger->info("url: {$url->getUrl()} / status: {$url->getStatus()} / extracted: {$c}");
-      }
+      $c = count($this->processorPool->getExtractedUrls());
+      $this->logger->info("url: {$url->getUrl()} / status: {$url->getStatus()} / extracted: {$c}");
     }
   }
 
