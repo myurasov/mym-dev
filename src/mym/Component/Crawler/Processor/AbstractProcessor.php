@@ -6,6 +6,7 @@ use mym\Component\Crawler\Processor\ProcessorInterface;
 use mym\Component\Crawler\Url;
 use Goutte\Client as GoutteClient;
 use Symfony\Component\DomCrawler\Crawler;
+use mym\Exception\HTTPException;
 
 class AbstractProcessor implements ProcessorInterface
 {
@@ -40,13 +41,23 @@ class AbstractProcessor implements ProcessorInterface
   protected function crawlUrl(&$url)
   {
     $client = $this->getWebClient();
-    $crawler = $client->request('GET', $url->getUrl());
+    $uri = $url->getUrl();
 
-    $url->setStatus(
-      $client->getResponse()->getStatus() >= 400
-        ? Url::STATUS_ERROR
-        : Url::STATUS_OK
-    );
+    try {
+      $crawler = $client->request('GET', $uri);
+
+      $status = $client->getResponse()->getStatus();
+
+      if ($status >= 400) {
+        throw HTTPException::createFromCode($status);
+      }
+
+    } catch (\Exception $e) {
+      $url->setStatus(Url::STATUS_ERROR);
+      throw $e;
+    }
+
+    $url->setStatus(Url::STATUS_OK);
 
     return $crawler;
   }
