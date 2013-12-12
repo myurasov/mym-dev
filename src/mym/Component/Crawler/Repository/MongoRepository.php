@@ -8,7 +8,7 @@ use mym\Component\Crawler\Repository\RepositoryInterface;
 class MongoRepository implements RepositoryInterface
 {
   private $server = '';
-  private $db = '';
+  private $database = '';
   private $collection = '';
 
   /**
@@ -30,12 +30,22 @@ class MongoRepository implements RepositoryInterface
   public function __construct($server = 'mongodb://localhost:27017', $db = 'Crawler', $collection = 'repository')
   {
     $this->server = $server;
-    $this->db = $db;
+    $this->database = $db;
     $this->collection = $collection;
+  }
 
+  /**
+   * @return \MongoCollection
+   */
+  private function getMongoCollection()
+  {
     // connect to the database
-    $mongoClient = new \MongoClient($this->server);
-    $this->mongoCollection = $mongoClient->selectCollection($this->db, $this->collection);
+    if (!$this->mongoCollection) {
+      $mongoClient = new \MongoClient($this->server);
+      $this->mongoCollection = $mongoClient->selectCollection($this->database, $this->collection);
+    }
+
+    return $this->mongoCollection;
   }
 
   private function createIndexes()
@@ -43,19 +53,19 @@ class MongoRepository implements RepositoryInterface
     static $indexesCreated = false;
 
     if (!$indexesCreated) {
-      $this->mongoCollection->ensureIndex([
+      $this->getMongoCollection()->ensureIndex([
         'url.updatedAt' => 1 /* ASC */
       ]);
 
-      $this->mongoCollection->ensureIndex([
+      $this->getMongoCollection()->ensureIndex([
         'url.createdAt' => 1 /* ASC */
       ]);
 
-      $this->mongoCollection->ensureIndex([
+      $this->getMongoCollection()->ensureIndex([
         'url.depth' => 1
       ]);
 
-      $this->mongoCollection->ensureIndex([
+      $this->getMongoCollection()->ensureIndex([
         'url.status' => 1
       ]);
 
@@ -85,7 +95,7 @@ class MongoRepository implements RepositoryInterface
 
   public function get($id)
   {
-    $data = $this->mongoCollection->findOne([
+    $data = $this->getMongoCollection()->findOne([
       '_id' => $id
     ]);
 
@@ -103,7 +113,7 @@ class MongoRepository implements RepositoryInterface
    */
   public function next()
   {
-    $data = $this->mongoCollection->findAndModify($this->createNextQuery(), [
+    $data = $this->getMongoCollection()->findAndModify($this->createNextQuery(), [
       '$set' => ['processing' => true]
     ], null, ['sort' => ['url.updatedAt' => 1]]);
 
@@ -118,12 +128,12 @@ class MongoRepository implements RepositoryInterface
 
   public function count()
   {
-    return $this->mongoCollection->count($this->createNextQuery());
+    return $this->getMongoCollection()->count($this->createNextQuery());
   }
 
   public function resetProcessing()
   {
-    $this->mongoCollection->update([
+    $this->getMongoCollection()->update([
       'processing' => true
     ], [
       '$set' => ['processing' => false]
@@ -134,7 +144,7 @@ class MongoRepository implements RepositoryInterface
 
   public function resetStatus($status)
   {
-    $this->mongoCollection->update([
+    $this->getMongoCollection()->update([
       'url.status' => $status
     ], [
       '$set' => ['url.status' => Url::STATUS_NEW]
@@ -145,19 +155,19 @@ class MongoRepository implements RepositoryInterface
 
   public function clear()
   {
-    $this->mongoCollection->drop();
+    $this->getMongoCollection()->drop();
   }
 
   public function remove($key)
   {
-    $this->mongoCollection->remove(['_id' => $key]);
+    $this->getMongoCollection()->remove(['_id' => $key]);
   }
 
   public function update(Url &$url)
   {
     $url->refreshUpdatedAt();
 
-    $this->mongoCollection->update([
+    $this->getMongoCollection()->update([
       '_id' => $url->getId(),
     ], [
       'url' => $url->toArray()
@@ -171,7 +181,7 @@ class MongoRepository implements RepositoryInterface
   {
     $url->refreshUpdatedAt();
 
-    $this->mongoCollection->findAndModify([
+    $this->getMongoCollection()->findAndModify([
       '_id' => $url->getId(),
     ], ['$set' => [
       'url' => $url->toArray(),
@@ -182,7 +192,7 @@ class MongoRepository implements RepositoryInterface
   public function insert(Url $url)
   {
     try {
-      $this->mongoCollection->insert([
+      $this->getMongoCollection()->insert([
         '_id' => $url->getId(),
         'processing' => false,
         'url' => $url->toArray()
