@@ -14,6 +14,7 @@ use mym\Component\GearmanTools\Utils as GearmanToolsUtils;
 
 use mym\Component\Crawler\DispatcherInterface;
 use Psr\Log\LoggerInterface;
+use Psr\Log\NullLogger;
 
 class GearmanDispatcher implements DispatcherInterface
 {
@@ -53,6 +54,11 @@ class GearmanDispatcher implements DispatcherInterface
   private $gearmanTaskPool;
 
   //
+
+  public function __construct()
+  {
+    $this->logger = new NullLogger();
+  }
 
   private function init()
   {

@@ -12,6 +12,7 @@ use mym\Component\Crawler\Processor\ProcessorPool;
 
 use mym\Component\Crawler\DispatcherInterface;
 use Psr\Log\LoggerInterface;
+use Psr\Log\NullLogger;
 
 class NativeDispatcher implements DispatcherInterface
 {
@@ -29,6 +30,11 @@ class NativeDispatcher implements DispatcherInterface
    * @var LoggerInterface
    */
   private $logger;
+
+  public function __construct()
+  {
+    $this->logger = new NullLogger();
+  }
 
   public function run()
   {
