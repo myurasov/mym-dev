@@ -10,6 +10,9 @@ namespace mym\Exception;
 use mym\Exception\HTTPException;
 
 class HttpBadRequestException extends HTTPException {
+
+  const CODE = 400;
+
   /**
    * The request could not be understood by the server due to malformed syntax. The client SHOULD NOT repeat the request without modifications.
    */

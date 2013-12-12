@@ -11,6 +11,8 @@ use mym\Exception\HTTPException;
 
 class HttpMethodNotAllowedException extends HTTPException {
 
+  const CODE = 405;
+
   private $allowedMethods;
 
   /**
