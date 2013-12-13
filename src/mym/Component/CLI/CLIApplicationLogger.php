@@ -7,13 +7,13 @@
 namespace mym\Component\CLI;
 
 use mym\Component\CLI\CLIApplication;
-use Psr\Log\LoggerInterface;
 use Psr\Log\LogLevel;
+use Psr\Log\AbstractLogger;
 
 /**
  * Logger adapter for CLIApplication
  */
-class CLIApplicationLogger implements LoggerInterface
+class CLIApplicationLogger extends AbstractLogger
 {
   /**
    * @var CLIApplication
@@ -25,79 +25,39 @@ class CLIApplicationLogger implements LoggerInterface
     $this->cliApplication = $cliApplication;
   }
 
-  public function alert($message, array $context = array())
-  {
-    $this->cliApplication->status($this->interpolate($message, $context));
-  }
-
-  public function critical($message, array $context = array())
-  {
-    $this->cliApplication->error($this->interpolate($message, $context));
-  }
-
-  public function debug($message, array $context = array())
-  {
-    $this->cliApplication->debug($this->interpolate($message, $context));
-  }
-
-  public function emergency($message, array $context = array())
-  {
-    $this->cliApplication->error($this->interpolate($message, $context));
-  }
-
-  public function error($message, array $context = array())
-  {
-    $this->cliApplication->error($this->interpolate($message, $context));
-  }
-
-  public function info($message, array $context = array())
-  {
-    $this->cliApplication->info($this->interpolate($message, $context));
-  }
-
-  public function notice($message, array $context = array())
-  {
-    $this->cliApplication->info($this->interpolate($message, $context));
-  }
-
-  public function warning($message, array $context = array())
-  {
-    $this->cliApplication->error($this->interpolate($message, $context));
-  }
-
   public function log($level, $message, array $context = array())
   {
     switch ($level) {
       case LogLevel::ALERT:
-        $this->alert($message, $context);
+        $this->cliApplication->status($this->interpolate('ALERT: ' . $message, $context));
         break;
 
       case LogLevel::CRITICAL:
-        $this->critical($message, $context);
+        $this->cliApplication->error($this->interpolate('CRITICAL: ' . $message, $context));
         break;
 
       case LogLevel::DEBUG:
-        $this->debug($message, $context);
+        $this->cliApplication->debug($this->interpolate('DEBUG: ' . $message, $context));
         break;
 
       case LogLevel::EMERGENCY:
-        $this->emergency($message, $context);
+        $this->cliApplication->error($this->interpolate('EMERGENCY: ' . $message, $context));
         break;
 
       case LogLevel::ERROR:
-        $this->error($message, $context);
+        $this->cliApplication->error($this->interpolate('ERROR: ' . $message, $context));
         break;
 
       case LogLevel::INFO:
-        $this->info($message, $context);
+        $this->cliApplication->info($this->interpolate('INFO: ' . $message, $context));
         break;
 
       case LogLevel::NOTICE:
-        $this->notice($message, $context);
+        $this->cliApplication->info($this->interpolate('NOTICE: ' . $message, $context));
         break;
 
       case LogLevel::WARNING:
-        $this->warning($message, $context);
+        $this->cliApplication->error($this->interpolate('WARNING: ' . $message, $context));
         break;
 
       default:
