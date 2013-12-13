@@ -77,7 +77,11 @@ class File extends DocumentAbstract
       $content = @file_get_contents($file, null, null, 0, 1024 * 1024);
 
       if (false == $content || !file_put_contents($this->_tmpFile, $content)) {
-        @unlink($file);
+
+        if (file_exists($this->_tmpFile)) {
+          @unlink($this->_tmpFile);
+        }
+
         throw new FileDownloadErrorException();
       }
 
