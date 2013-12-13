@@ -67,7 +67,7 @@ class GearmanDispatcher implements DispatcherInterface
 
       $this->gearmanTaskPool->setServers($this->servers);
       $this->gearmanTaskPool->setMaxTasks($this->maxTasks);
-      $this->gearmanTaskPool->setTaskCallback([$this, 'onTask']);
+      $this->gearmanTaskPool->setTaskCallback([$this, '_onTask']);
       $this->gearmanTaskPool->setFunctionName($this->functionName);
 
       $this->gearmanTaskPool->setWorkloadCallback(function() {
@@ -83,7 +83,7 @@ class GearmanDispatcher implements DispatcherInterface
     $this->gearmanTaskPool->run();
   }
 
-  public function onTask(\GearmanTask $task)
+  public function _onTask(\GearmanTask $task)
   {
     $data = GearmanToolsUtils::unpackMessage($task->data());
 
