@@ -29,16 +29,6 @@ class AbstractDocumentManagerFactory
   {
   }
 
-  /**
-   * @return \MongoClient
-   */
-  public static function getMongoClient()
-  {
-    $dm = static::get();
-    $dm->getConnection()->initialize();
-    return $dm->getConnection()->getMongo()->selectDB($dm->getConfiguration()->getDefaultDB());
-  }
-
   public static function persist($document)
   {
     static::get()->persist($document);
@@ -47,5 +37,14 @@ class AbstractDocumentManagerFactory
   public static function flush($document = null)
   {
     static::get()->flush($document);
+  }
+
+  /**
+   * @return \MongoClient
+   */
+  public static function getMongo()
+  {
+    static::get()->getConnection()->initialize();
+    return static::get()->getConnection()->getMongo();
   }
 }
