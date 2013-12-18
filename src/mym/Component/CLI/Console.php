@@ -7,11 +7,13 @@
 namespace mym\Component\CLI;
 
 use mym\Component\CLI\CLICommand;
+use Symfony\Component\Finder\Finder;
 
 class Console
 {
-  protected $projectName;
-  protected $logDir;
+  private $logDir;
+  private $commandDir;
+  private $commandNamespace;
 
   public function run($argc, $argv)
   {
@@ -21,12 +23,10 @@ class Console
 
     } else if ($argv[1] == "list") {
 
-      $g = glob("../modules/{$this->projectName}/Command/*.php");
+      $finder = new Finder();
 
-      foreach ($g as $f) {
-        $f = basename($f);
-        $f = str_replace(".php", "", $f);
-        echo "$f\n";
+      foreach ($finder->files()->in($this->getCommandDir()) as $file) {
+        echo $this->getClass($file, false), "\n";
       }
 
       exit(0);
@@ -35,7 +35,7 @@ class Console
     try {
 
       // create
-      $command = "{$this->projectName}\Command\\" . preg_replace('#[/\\\\]+#s', '\\', $argv[1]);
+      $command = $this->commandNamespace . '\\' . preg_replace('#[/\\\\]+#s', '\\', $argv[1]);
       $command /* @var $command CLICommand */ = new $command;
 
       // set log file
@@ -55,15 +55,20 @@ class Console
 
   }
 
-  public function getProjectName()
+  private function getClass($file, $namespaced = true)
   {
-    return $this->projectName;
+    $class = substr($file, strlen($this->getCommandDir()) + 1);
+    $class = preg_replace('#\.php$#i', '', $class);
+    $class = str_replace('/', '\\', $class);
+
+    if ($namespaced) {
+      $class = $this->commandNamespace . '\\' . $class;
+    }
+
+    return $class;
   }
 
-  public function setProjectName($projectName)
-  {
-    $this->projectName = $projectName;
-  }
+  // <editor-fold defaultstate="collapsed" desc="accessors">
 
   public function getLogDir()
   {
@@ -74,4 +79,26 @@ class Console
   {
     $this->logDir = $logDir;
   }
+
+  public function getCommandDir()
+  {
+    return realpath($this->commandDir);
+  }
+
+  public function setCommandDir($commandDir)
+  {
+    $this->commandDir = $commandDir;
+  }
+
+  public function getCommandNamespace()
+  {
+    return $this->commandNamespace;
+  }
+
+  public function setCommandNamespace($commandNamespace)
+  {
+    $this->commandNamespace = $commandNamespace;
+  }
+
+  // </editor-fold>
 }
