@@ -2,7 +2,7 @@
 
 /**
  * Models base class
- * 
+ *
  * @copyright 2010 Misha Yurasov
  * @package mym
  */
@@ -39,7 +39,7 @@ abstract class ModelBase extends Storage
 
   /**
    * Constructor
-   * 
+   *
    * @param array $data
    */
   public function __construct($data = array())
@@ -129,12 +129,11 @@ abstract class ModelBase extends Storage
 
     if (is_null($id))
     {
-      throw new Exception(get_called_class() . '::' . $this->idKey .
-              ' is NULL', \mym\ERROR_MISC);
+      throw new Exception(get_called_class() . '::' . $this->idKey . ' is NULL');
     }
 
     $pdo = PDOHelper::getPDO();
-    
+
     $whereSql = 'WHERE ' . $this->idKey .
       '=' . $pdo->quote($id);
 
@@ -192,7 +191,7 @@ abstract class ModelBase extends Storage
       $this->data[$this->idKey] = $id;
 
     if (is_null($this->data[$this->idKey]))
-      throw new Exception(get_called_class() . '::' . $this->idKey . ' is NULL', mym\ERROR_MISC);
+      throw new Exception(get_called_class() . '::' . $this->idKey . ' is NULL');
 
     $pdo = PDOHelper::getPDO();
 
@@ -222,7 +221,7 @@ abstract class ModelBase extends Storage
 
   /**
    * Get id key name
-   * 
+   *
    * @return string
    */
   public function getIdKey()
@@ -260,7 +259,7 @@ abstract class ModelBase extends Storage
     $sql = PDOHelper::prepareSQL(
       "SELECT %k FROM {$instance->getTable()} WHERE ", $instance->data) .
         PDOHelper::prepareSQL($condition, $sqlParams);
-    
+
     if (false === ($data = $pdo->query($sql)->fetch(\PDO::FETCH_ASSOC)))
       return false;
 

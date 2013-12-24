@@ -52,7 +52,7 @@ class Storage implements ArrayAccess
       }
       else
       {
-        throw new Exception("Data field '$field_name' doesn't exist", \mym\ERROR_MISC);
+        throw new Exception("Data field '$field_name' doesn't exist");
       }
     }
   }
@@ -84,7 +84,7 @@ class Storage implements ArrayAccess
       }
       else
       {
-        throw new Exception("Data field '$name' doesn't exist", \mym\ERROR_MISC);
+        throw new Exception("Data field '$name' doesn't exist");
       }
     }
 

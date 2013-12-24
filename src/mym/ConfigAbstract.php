@@ -36,7 +36,7 @@ abstract class ConfigAbstract
         }
         catch (InternalException $e)
         {
-          throw new Exception("Option '$option_name' doesn't exist", \mym\ERROR_MISC);
+          throw new Exception("Option '$option_name' doesn't exist");
         }
       }
       else // Top-level name
@@ -47,7 +47,7 @@ abstract class ConfigAbstract
         }
         else
         {
-          throw new Exception("Option '$option_name' doesn't exist", \mym\ERROR_MISC);
+          throw new Exception("Option '$option_name' doesn't exist");
         }
       }
     }
