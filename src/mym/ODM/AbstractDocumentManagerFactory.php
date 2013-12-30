@@ -47,4 +47,13 @@ class AbstractDocumentManagerFactory
     static::get()->getConnection()->initialize();
     return static::get()->getConnection()->getMongo();
   }
+
+  /**
+   * @param string $document
+   * @return \MongoCollection
+   */
+  public static function getDocumentMongoCollection($document)
+  {
+    return static::get()->getDocumentCollection($document)->getMongoCollection();
+  }
 }
