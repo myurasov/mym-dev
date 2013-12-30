@@ -348,8 +348,12 @@ class CLIApplication
    * @param mixed $type
    * @param string $description
    */
-  public function declareParameter($name, $alias, $default_value = null, $type = self::PARAM_TYPE_AUTO, $description = '', $required =  false)
+  public function declareParameter($name, $alias = null, $default_value = null, $type = self::PARAM_TYPE_AUTO, $description = '', $required =  false)
   {
+    if (is_null($alias)) {
+      $alias = $name;
+    }
+
     $this->declared_parameters[$name] = array(
       'alias' => $alias,
       'default' => $default_value,
@@ -477,12 +481,14 @@ class CLIApplication
 
         // Parameter description
 
-        $text = Text::textAlign($declared_parameter['desc'], Text::TEXT_ALIGN_LEFT,
-          $this->options['max_output_width'] - 4, "\n", true, 1, 0);
+        if (!empty($declared_parameter['desc'])) {
+          $text = Text::textAlign($declared_parameter['desc'], Text::TEXT_ALIGN_LEFT,
+            $this->options['max_output_width'] - 4, "\n", true, 1, 0);
 
-        $text = Text::textIndent($text, ' ', 4);
+          $text = Text::textIndent($text, ' ', 4);
 
-        echo "\n\n$text";
+          echo "\n\n$text";
+        }
       }
 
       // Line break after last parameter
@@ -528,6 +534,10 @@ class CLIApplication
     // $this->progress_refresh_interval === null if no progress options are set
     if (!is_null($this->progress_refresh_interval))
     {
+      // normalize current value
+      $total = $this->options->get('progress_items_total');
+      $current_item = max(0, min($current_item, $total));
+
       // Time passed since last call
       $progress_info_time_diff = microtime(true) - $this->progress_last_time;
 
@@ -535,7 +545,7 @@ class CLIApplication
       $time_for_progress = $progress_info_time_diff >= $this->progress_refresh_interval;
 
       // Is last item reached?
-      $last_item_reached = $current_item >= $this->options->get('progress_items_total');
+      $last_item_reached = $current_item >= $total;
 
       if ($time_for_progress  || $last_item_reached)
       {
@@ -571,14 +581,14 @@ class CLIApplication
           $progress_info_time_passed = $this->progress_last_time - $this->progress_start_time; // Total time difference
           $progress_info_speed_avg = $current_item / $progress_info_time_passed; // [% / sec]
           $progress_info_speed_curr = $items_diff / $progress_info_time_diff; // [% / sec]
-          $progress_info_eta = ($this->options['progress_items_total'] - $current_item)
+          $progress_info_eta = ($total - $current_item)
             / $progress_info_speed_avg; // Estimated time left [sec]
         }
 
         // Compose progress text parts:
 
         // Done part
-        $progress_info_done_part = $current_item / $this->options['progress_items_total'];
+        $progress_info_done_part = $current_item / $total;
 
         // %percent% (41.5%)
         $this->progress_tags['%percent%'] = sprintf('%.'
