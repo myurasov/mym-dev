@@ -106,4 +106,13 @@ class Filesystem
 
     return $contentLenght;
   }
+
+  public static function makeFilePath($filepath)
+  {
+    $dir = dirname($filepath);
+
+    if (!is_dir($dir)) {
+      return mkdir($dir, 0777, true);
+    }
+  }
 }
