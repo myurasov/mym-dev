@@ -31,7 +31,7 @@ class HttpRequestHandler
     if (class_exists($routerClassName)) {
       $router /* @var $router Routing\RouterInterface */ = new $routerClassName();
     } else {
-       throw new \Exception('Router class not found');
+       throw new \Exception('Router class not found: ' . $routerClassName);
     }
 
     $router->route($this->request);
