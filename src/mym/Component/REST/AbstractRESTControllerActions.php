@@ -2,10 +2,11 @@
 
 namespace mym\Component\REST;
 
+use mym\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use mym\Exception\HttpNotImplementedException;
 
-class RESTControllerAbstract
+class AbstractRESTControllerActions extends AbstractController
 {
   /**
    * GET /collection/id/sub-collection/sub-id
