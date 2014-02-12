@@ -2,6 +2,7 @@
 
 /**
  * Document abstarct
+ * Also used for embedded documents
  *
  * @copyright 2012, Mikhail Yurasov
  */
@@ -9,11 +10,12 @@
 namespace mym\ODM;
 
 use Doctrine\ODM\MongoDB\DocumentManager;
+use Symfony\Component\PropertyAccess\PropertyAccessor;
 use Symfony\Component\Validator\Validation;
 use Doctrine\ODM\MongoDB\Mapping\Annotations as ODM;
 use Symfony\Component\Validator\Exception\ValidatorException;
 
-abstract class DocumentAbstract
+abstract class AbstractDocument
 {
   /**
    * Get document as array
