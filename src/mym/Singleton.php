@@ -9,6 +9,9 @@ namespace mym;
 trait Singleton {
   protected static $instance;
 
+  /**
+   * @return static
+   */
   public static function getInstance() {
    if (is_null(static::$instance)) {
       static::$instance = new static();
@@ -17,6 +20,9 @@ trait Singleton {
     return static::$instance;
   }
 
+  /**
+   * @return static
+   */
   public function __construct() {
     if (static::$instance) {
       throw new \Exception('Class ' . get_called_class() .' is a singleton');
