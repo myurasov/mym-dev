@@ -110,4 +110,14 @@ trait ReadableIdTrait
   {
     $this->readableId = $readableId;
   }
+
+  /**
+   * @ODM\PrePersist
+   */
+  public function updateReadableId()
+  {
+    if ($this->readableId === null) {
+      $this->createReadableId();
+    }
+  }
 }
