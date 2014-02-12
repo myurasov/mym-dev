@@ -45,6 +45,8 @@ abstract class AbstractController
     }
   }
 
+  //<editor-fold desc="accessors">
+
   public function setRequest(Request $request)
   {
     $this->request = $request;
@@ -74,4 +76,6 @@ abstract class AbstractController
   {
     return $this->response;
   }
+
+  //</editor-fold>
 }
