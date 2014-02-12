@@ -2,6 +2,10 @@
 
 namespace mym\Component\REST;
 
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\PropertyAccess\PropertyAccessor;
+
+use mym\Exception\HttpForbiddenException;
 use mym\Exception\HttpNotImplementedException;
 use mym\ODM\AbstractRepository;
 
@@ -21,6 +25,11 @@ class AbstractRESTController extends AbstractRESTControllerActions
 
   protected $defaultLimit = 1;
   protected $maxLimit = 100;
+
+  /**
+   * @var PropertyAccessor
+   */
+  private $propertyAccessor;
 
   public function getResourceAction(Request $request)
   {
@@ -42,7 +51,7 @@ class AbstractRESTController extends AbstractRESTControllerActions
     if (preg_match('#^(id|md5):(.+)$#', $id, $m)) {
       return $this->getRepository()->findOneBy([$m[1] => $m[2]]);
     } else {
-      return call_user_func([$this->documentName, 'load'], $id, $required);
+      return call_user_func([$this->documentName, 'loadUsingDocumentManager'], $this->getDm(), $id, $required);
     }
   }
 
@@ -75,6 +84,19 @@ class AbstractRESTController extends AbstractRESTControllerActions
     return $this->response;
   }
 
+  public function createResourceAction(Request $request)
+  {
+    $document = new $this->documentName();
+    $input= $request->request->all();
+    $this->updateDocument($document, $input);
+
+    $this->dm->persist($document);
+    $this->dm->flush($document);
+
+    $this->response->setData($document);
+    return $this->response;
+  }
+
   public function search()
   {
     $repository = $this->getRepository();
@@ -89,6 +111,77 @@ class AbstractRESTController extends AbstractRESTControllerActions
       throw new HttpNotImplementedException();
     }
   }
+
+  //<editor-fold desc="updating">
+
+  /**
+   * Update field
+   * Should be overriden for access check
+   *
+   * @param $document
+   * @param $path
+   * @param $value
+   */
+  protected function updateField(&$document, $path, $value)
+  {
+    // create property accessor
+    if (!$this->propertyAccessor) {
+      $this->propertyAccessor = new PropertyAccessor();
+    }
+
+    $this->propertyAccessor->setValue($document, $path, $value);
+  }
+
+  /**
+   * Update document
+   *
+   * @param $document
+   * @param $input
+   */
+  protected function updateDocument(&$document, $input)
+  {
+    if (is_array($input)) {
+      $this->walkArray($input, function ($path, $value) use ($document) {
+          // update property
+          try {
+            $this->updateField($document, $path, $value);
+          } catch (FieldUpdateException $e) {
+            throw new HttpForbiddenException('Failed to update ' . $path);
+          }
+        });
+    }
+  }
+
+  /**
+   * Walks through array
+   * @param $array
+   * @param $callback function($path, $value)
+   */
+  private function walkArray($array, $callback, $iterator = null, $prefix = '')
+  {
+
+    if (is_null($iterator)) {
+      $iterator = new \RecursiveArrayIterator($array);
+    }
+
+    while ($iterator->valid()) {
+
+      if ($iterator->hasChildren()) {
+
+        $prefix = empty($prefix) ? $iterator->key() : ($prefix . '.' . $iterator->key());
+        $this->walkArray(null, $callback, $iterator->getChildren(), $prefix);
+
+      } else {
+        call_user_func($callback,
+          (empty($prefix) ? '' : ($prefix . '.')) . $iterator->key(),
+          $iterator->current());
+      }
+
+      $iterator->next();
+    }
+  }
+
+  //</editor-fold>
 
   // <editor-fold desc="accessors">
 
