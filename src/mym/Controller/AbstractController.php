@@ -41,7 +41,7 @@ abstract class AbstractController
     }
 
     if (!in_array($this->request->getMethod(), $methods)) {
-      throw (new HttpMethodNotAllowedException())->setAllowedMethods(implode(',', $methods));
+      throw (new HttpMethodNotAllowedException())->setAllowedMethods(implode(', ', $methods));
     }
   }
 
