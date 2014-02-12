@@ -31,6 +31,13 @@ class MongoAuthService extends AbstractAuthService
     );
   }
 
+  public function removeToken($token)
+  {
+    $this->mongoCollection->remove([
+        '_id' => $token
+      ]);
+  }
+
   public function setUserId($token, $userId, $updateExpiration = false)
   {
     $data = [
