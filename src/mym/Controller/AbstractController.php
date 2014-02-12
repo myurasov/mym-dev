@@ -45,6 +45,14 @@ abstract class AbstractController
     }
   }
 
+  /**
+   * Ensure HTTP method is POST
+   */
+  protected function ensureMethodIsPost()
+  {
+    $this->ensureMethodIs('POST');
+  }
+
   //<editor-fold desc="accessors">
 
   public function setRequest(Request $request)
