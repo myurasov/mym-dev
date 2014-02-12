@@ -23,6 +23,11 @@ trait Singleton {
   /**
    * @return static
    */
+  public static function get()
+  {
+    return static::getInstance();
+  }
+
   public function __construct() {
     if (static::$instance) {
       throw new \Exception('Class ' . get_called_class() .' is a singleton');
