@@ -22,6 +22,14 @@ class HttpRequestHandler
 
   private $controller;
 
+  private function handleJsonRequest()
+  {
+    if (0 === strpos($this->request->headers->get('Content-Type'), 'application/json')) {
+      $data = json_decode($this->request->getContent(), true);
+      $this->request->request->replace(is_array($data) ? $data : []);
+    }
+  }
+
   private function processRequest()
   {
     // route
@@ -81,6 +89,7 @@ class HttpRequestHandler
 
     try {
 
+        $this->handleJsonRequest();
         $this->processRequest();
 
         if (!($this->response instanceof Response)) {
