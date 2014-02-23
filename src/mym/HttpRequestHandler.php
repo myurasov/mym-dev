@@ -57,7 +57,7 @@ class HttpRequestHandler
       $action = $this->controller[1];
 
       if (!class_exists($controllerClass)) {
-        throw new Exception\HttpNotFoundException("Controller class '{$controllerClass}' not found");
+        throw new Exception\HttpNotFoundException("Class '{$controllerClass}' not found");
       }
 
       if (!method_exists($controllerClass, $action)) {
