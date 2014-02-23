@@ -10,6 +10,7 @@
 namespace mym\ODM;
 
 use Doctrine\ODM\MongoDB\DocumentManager;
+use mym\Exception\HttpNotFoundException;
 use Symfony\Component\PropertyAccess\PropertyAccessor;
 use Symfony\Component\Validator\Validation;
 use Symfony\Component\Validator\Exception\ValidatorException;
@@ -93,8 +94,8 @@ abstract class AbstractDocument
       $document = $dm->find($documentName, $id);
     }
 
-    if ($require && is_null($document)) {
-      throw new \Exception('Document not found');
+    if ($required && is_null($document)) {
+      throw new HttpNotFoundException('Document not found');
     }
 
     return $document;
