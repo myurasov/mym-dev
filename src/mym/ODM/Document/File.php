@@ -6,16 +6,15 @@ use Doctrine\ODM\MongoDB\Mapping\Annotations as ODM;
 use JMS\Serializer\Annotation as Serializer;
 
 use Doctrine\MongoDB\GridFSFile;
+use mym\ODM\AbstractDocument;
 use mym\ODM\Exception\FileDownloadErrorException;
 use mym\ODM\Traits\TimestampTrait;
-
-use mym\ODM\DocumentAbstract;
 
 /**
  * @ODM\Document(collection="files")
  * @Serializer\ExclusionPolicy("all")
  */
-class File extends DocumentAbstract
+class File extends AbstractDocument
 {
   use TimestampTrait;
 
