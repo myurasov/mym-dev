@@ -1,14 +1,18 @@
 {
-    "name": "myurasov/mym-dev",
-    "description": "mym PHP Components",
-    "license": "MIT",
-    "authors": [
-        {
-            "name": "Mikhail Yurasov",
-            "email": "me@yurasov.me"
-        }
-    ],
-    "require": {
-
+  "name": "myurasov/mym-dev",
+  "description": "mym PHP Components",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Mikhail Yurasov",
+      "email": "me@yurasov.me"
     }
+  ],
+  "require": {
+  },
+  "autoload": {
+    "psr-0": {
+      "mym": "src/"
+    }
+  }
 }
