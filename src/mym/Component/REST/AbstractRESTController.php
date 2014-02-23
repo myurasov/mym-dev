@@ -2,6 +2,7 @@
 
 namespace mym\Component\REST;
 
+use mym\Util\Arrays;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\PropertyAccess\PropertyAccessor;
 
@@ -86,12 +87,16 @@ class AbstractRESTController extends AbstractRESTControllerActions
 
   public function createResourceAction(Request $request)
   {
+    // create new instance of the document
     $document = new $this->documentName();
+
     $input= $request->request->all();
     $this->updateDocument($document, $input);
 
     $this->dm->persist($document);
     $this->dm->flush($document);
+
+    //
 
     $this->response->setData($document);
     return $this->response;
@@ -141,7 +146,7 @@ class AbstractRESTController extends AbstractRESTControllerActions
   protected function updateDocument(&$document, $input)
   {
     if (is_array($input)) {
-      $this->walkArray($input, function ($path, $value) use ($document) {
+      Arrays::walkArray($input, function ($path, $value) use ($document) {
           // update property
           try {
             $this->updateField($document, $path, $value);
@@ -149,35 +154,6 @@ class AbstractRESTController extends AbstractRESTControllerActions
             throw new HttpForbiddenException('Failed to update ' . $path);
           }
         });
-    }
-  }
-
-  /**
-   * Walks through array
-   * @param $array
-   * @param $callback function($path, $value)
-   */
-  private function walkArray($array, $callback, $iterator = null, $prefix = '')
-  {
-
-    if (is_null($iterator)) {
-      $iterator = new \RecursiveArrayIterator($array);
-    }
-
-    while ($iterator->valid()) {
-
-      if ($iterator->hasChildren()) {
-
-        $prefix = empty($prefix) ? $iterator->key() : ($prefix . '.' . $iterator->key());
-        $this->walkArray(null, $callback, $iterator->getChildren(), $prefix);
-
-      } else {
-        call_user_func($callback,
-          (empty($prefix) ? '' : ($prefix . '.')) . $iterator->key(),
-          $iterator->current());
-      }
-
-      $iterator->next();
     }
   }
 
