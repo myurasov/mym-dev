@@ -76,10 +76,10 @@ abstract class AbstractDocument
    * Load document
    * @param \Doctrine\ODM\MongoDB\DocumentManager $dm
    * @param mixed $id
-   * @param bool $require
+   * @param bool $required
    * @throws \Exception
    */
-  public static function loadUsingDocumentManager(DocumentManager $dm, $id = '', $require = false)
+  public static function loadUsingDocumentManager(DocumentManager $dm, $id, $required = false)
   {
     $documentName = get_called_class();
     $document = null;
