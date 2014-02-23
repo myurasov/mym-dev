@@ -49,6 +49,10 @@ abstract class AbstractAuthService
     return $token;
   }
 
+  /**
+   * @param Request $request
+   * @return string|bool
+   */
   public function getUserIdFromRequest(Request $request)
   {
     $token = $this->getTokenFromRequest($request);
