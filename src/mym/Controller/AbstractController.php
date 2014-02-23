@@ -3,6 +3,9 @@
 namespace mym\Controller;
 
 use Doctrine\ODM\MongoDB\DocumentManager;
+use LegalAdvice\Document\User;
+use mym\Component\Auth\AbstractAuthService;
+use mym\Exception\HttpForbiddenException;
 use mym\Exception\HttpMethodNotAllowedException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -24,6 +27,11 @@ abstract class AbstractController
    */
   protected $dm;
 
+  /**
+   * @var AbstractAuthService
+   */
+  protected $authService;
+
   public function __construct(Request $request)
   {
     $this->request = $request;
@@ -40,7 +48,7 @@ abstract class AbstractController
       $methods = [$methods];
     }
 
-    if (!in_array($this->request->getMethod(), $methods)) {
+    if (!in_array($this->request->getMethod(), $methods, true)) {
       throw (new HttpMethodNotAllowedException())->setAllowedMethods(implode(', ', $methods));
     }
   }
@@ -51,6 +59,35 @@ abstract class AbstractController
   protected function ensureMethodIsPost()
   {
     $this->ensureMethodIs('POST');
+  }
+
+  /**
+   * Ensure user is logged in and has specific role
+   *
+   * @param $roles
+   * @throws \mym\Exception\HttpForbiddenException
+   * @return object
+   */
+  protected function ensureUserRoleIs($roles)
+  {
+    if (is_string($roles)) {
+      $roles = [$roles];
+    }
+
+    // load user
+    $userId = $this->authService->getUserIdFromRequest($this->request);
+
+    if (false === $userId) {
+      throw new HttpForbiddenException();
+    }
+
+    $user = User::load($userId, true /* required */);
+
+    if (0 === count(array_intersect($user->getRoles(), $roles))) {
+      throw new HttpForbiddenException();
+    }
+
+    return $user;
   }
 
   //<editor-fold desc="accessors">
@@ -83,6 +120,16 @@ abstract class AbstractController
   public function getResponse()
   {
     return $this->response;
+  }
+
+  public function setAuthService(AbstractAuthService $authService)
+  {
+    $this->authService = $authService;
+  }
+
+  public function getAuthService()
+  {
+    return $this->authService;
   }
 
   //</editor-fold>
