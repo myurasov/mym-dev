@@ -12,9 +12,13 @@ namespace mym\ODM;
 use Doctrine\ODM\MongoDB\DocumentManager;
 use Symfony\Component\PropertyAccess\PropertyAccessor;
 use Symfony\Component\Validator\Validation;
-use Doctrine\ODM\MongoDB\Mapping\Annotations as ODM;
 use Symfony\Component\Validator\Exception\ValidatorException;
 
+use Doctrine\ODM\MongoDB\Mapping\Annotations as ODM;
+
+/**
+ * @ODM\MappedSuperclass
+ */
 abstract class AbstractDocument
 {
   /**
@@ -78,6 +82,7 @@ abstract class AbstractDocument
    * @param mixed $id
    * @param bool $required
    * @throws \Exception
+   * @return static
    */
   public static function loadUsingDocumentManager(DocumentManager $dm, $id, $required = false)
   {
